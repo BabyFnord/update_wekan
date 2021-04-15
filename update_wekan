@@ -4,10 +4,10 @@
 # To install wekan, if you haven't already, see https://lab.uberspace.de/guide_wekan.html
 # v1.0 12.04.2021 created by Kim Diallo/Uberspace.de
 # v1.1 13.04.2021 revised by Patrick Raddatz
-# v1.2 15.04.2021 improved by Kim Diallo
+# v1.3 15.04.2021 improved by Kim Diallo
 
 # Error and var handling (see details at https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html)
-set -eauo pipeerror
+set -eauo pipefail
 
 
 # This function reverts wekan to a prior version 
@@ -95,7 +95,7 @@ function restart_wekan () {
 
 	}
 
-# Checking whether script was called with '--revert'. If it was, only revert to the given version, and exit. 
+# Checking whether script was called with '--revert'. If it was, only revert to the given version, then exit. 
 if [[ "${1}" = "--revert" ]]; then 
 
 	if [[ "${#}" -lt 2 ]]; then 
