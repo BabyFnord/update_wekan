@@ -1,0 +1,220 @@
+#!/usr/bin/env bash
+# Uberspace 7: Wekan Update Skript v1.1
+# This script updates or reverts updates (initiated by this script) to wekan.
+# To install wekan, if you haven't already, see https://lab.uberspace.de/guide_wekan.html
+# v1.0 12.04.2021 created by Kim Diallo/Uberspace.de
+# v1.1 13.04.2021 revised by Patrick Raddatz
+# v1.2 15.04.2021 improved by Kim Diallo
+
+# Error and var handling (see details at https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html)
+set -eauo pipeerror
+
+
+# This function reverts wekan to a prior version 
+function revert () {
+	
+	local _revert_version_="${1}"
+
+	# Check if a given version is present.
+	if [ -d "$HOME/wekan/wekan-${_revert_version_}" ]; then 
+
+		# Store install dir from destination version to _dir_ var. 		
+		local _dir_="$HOME/wekan/wekan-${_revert_version_}"
+
+		# Store node version to run destination wekan to var. 		
+		local _node_version_="$(cat ${_dir_}/NODE_VERSION)"
+
+		# Set the needed node version. 
+		uberspace tools version use node "${_node_version_}"
+
+		# Point the 'current' symlink to given version. 
+		ln -sfn "${_dir_}/bundle" $HOME/wekan/current
+
+
+		# Check if wekan service is running.
+		if restart_wekan; then 
+			tput smso; echo -e "\n We're done--wekan is operational ${_revert_version_}, exiting now.\n\n"; tput rmso
+		else 
+			tput bel; tput smso; tput setaf 1; echo -e "\n Oops, something went wrong--wekan service isn't running.\n\n"; tput rmso; tput sgr0
+			return 1
+		fi
+	else 
+		tput bel; tput smso; tput setaf 1; echo -e "\n Install directory to selected wekan version present in $HOME/wekan.\n\n"; tput rmso; tput sgr0
+		return 1
+	fi
+
+	return 0
+	}
+
+
+# This function monitors the proper supervisorctl sequence (stopping > updating > starting).
+function restart_wekan () {
+
+	# Prior check, whether wekan is running at all. 
+	if $(supervisorctl status wekan |grep -q 'RUNNING'); then
+
+		# If it is, store the PID in local var. 
+		local _pid_="$(supervisorctl pid wekan)"
+
+		# Now, stop wekan. 
+		supervisorctl stop wekan
+
+		# Wait until we're done. 
+		while kill -0 ${_pid_} 2> /dev/null; do
+			:
+		done
+
+	fi
+
+	# Update and start the wekan service.
+	supervisorctl update wekan
+	
+	# Wait again, until we're done, avoiding any collisions. 
+	sleep 1
+
+	# Let's start once more.
+	supervisorctl start wekan
+
+	# Set its new PID to a variable. 
+        local _pid_="$(supervisorctl pid wekan)"
+
+	# Wait once more, just to be safe.
+	sleep 10
+
+	# Checking whether wekan service is up & running with the same PID. Return 0 if it is, or 1 if not. 
+	if $(supervisorctl status wekan |grep -q 'RUNNING'); then 	
+		
+		if [[ "${_pid_}" == "$(supervisorctl pid wekan)" ]]; then
+			return 0
+		else 
+			return 1
+		fi
+	else 
+		return 1
+	fi
+
+	}
+
+# Checking whether script was called with '--revert'. If it was, only revert to the given version, and exit. 
+if [[ "${1}" = "--revert" ]]; then 
+
+	if [[ "${#}" -lt 2 ]]; then 
+		tput bel; tput smso; tput setaf 1; echo -e "\n Unable to revert, please try: \n\t wekan_update --revert [old version] \n\n"; tput rmso; tput sgr0
+		exit 1
+	fi
+
+	if revert "${2}"; then 
+		exit 0
+	else 
+		exit 1
+	fi
+fi
+
+# Stores our current wekan version into a variable.
+_version_="$(curl --silent https://releases.wekan.team/ |grep -oEm 1 wekan\-[0-9]+\.[0-9]+\.zip)"
+
+# Determines the download URL by means of this variable.
+_url_="https://releases.wekan.team/${_version_}"
+
+
+# Setzt das Verzeichnis für die Version in eine Variable.  
+# Zunächst wird der Ordner ~/wekan angelegt, darin ein
+# Verzeichnis für diese Version, und darin schließlich der bisherige Pfad.
+# So kann im Nachgang zum Build einer neuen Version
+# ein Symlink auf die neue Version gesetzt werden.
+_dir_="$HOME/wekan/${_version_/.zip/}"
+
+
+# Wenn das Verzeichnis aus der Variable existiert, ist die Version
+# anscheinend vorhanden => der Build erübrigt sich damit, und das Skript endet.
+if [[ -d "${_dir_}" ]]; then
+	tput smso; echo -e "\n Nothing to do, wekan is already up to date, exiting now.\n\n"; tput rmso
+	exit 0
+else
+	# Besteht das Verzeichnis nicht, wird es angelegt.
+	mkdir -p "${_dir_}"
+fi
+
+
+# Hier wird ein tempdir für den Download erstellt und als Variable abgelegt.
+# Dadurch vermeiden wir Kollisionen, und halten das post-build Aufräumen übersichtlich.
+_build_dir_="$(mktemp --directory --tmpdir wekan.XXX)"
+
+
+# Nun wird Wekan in das tempdir runtergeladen und entpackt. Um das Ausgangsverzeichnis 
+# der Usersession beizubehalten, wird diese Aktion durch ( ) in einer Subshell ausgeführt.
+(
+	cd "${_build_dir_}"
+	wget "${_url_}"
+	unzip ${_version_} -d "${_dir_}"
+)
+
+# Das tempdir wird nicht mehr benötigt, und entfernt.
+rm -r "${_build_dir_}"
+
+
+# Prüfe die laufende node Version und setze das Ergebnis in eine Variable.
+_node_current_="$(uberspace tools version show node |cut -d"'" -f4)"
+
+# get wekans recommended node version from there dockerfile 
+_node_wekan_="$(curl --silent https://raw.githubusercontent.com/wekan/wekan/master/Dockerfile |grep -oEm 1 NODE_VERSION=v[0-9]+ |cut -d'v' -f2)"
+
+# Vergleiche beide Nodeversionen. Ist eine neuere verfügbar, wird diese eingesetzt.
+# ! VORSICHT ! Dies gilt global für den ganzen Account und dessen node Software,
+# sollte solche genutzt werden.
+if ! [[ "${_node_wekan_}" = "${_node_current_}" ]]; then
+	uberspace tools version use node "${_node_wekan_}"
+fi
+
+# Die zum Build und Betrieb genutzte node Version wird in eine Datei im
+# Verzeichnis hinterlegt. Falls ein roll-back nötig wird, ist klar, zu welcher Version.
+echo "${_node_wekan_}" >> "${_dir_}/NODE_VERSION"
+
+# write the installation directory in a variable, npm has has to be executed from there 
+_install_dir_="${_dir_}/bundle/programs/server"
+
+# write some files that would disturb a rebuild in an array
+declare -a _FILES_TO_REMOVE_=(
+
+	${_install_dir_}/node_modules/.bin/node-gyp
+	${_install_dir_}/node_modules/.bin/node-pre-gyp
+	${_install_dir_}/node_modules/chalk/node_modules/.bin/strip-ansi
+
+)
+
+# check if they are presend and remove them if 
+for file in ${_FILES_TO_REMOVE_[@]}; do 
+	if [ -f "${file}" ]; then
+		rm "${file}"
+	fi
+done
+
+# enter the installation directory and execute npm - from a subshell to keep main shell in start directory.
+(
+	cd "${_install_dir_}"
+	npm install node-gyp node-pre-gyp fibers
+)
+
+
+# Vor der Aktivierung der neuen node Version wird zunächst in eine
+# Variable eingetragen, wohin der Symlink ~/wekan/current aktuell zeigt.
+_former_version_="$(ls -la $HOME/wekan/current |cut -d'>' -f2)"
+
+# Erst dann wird der Symlink auf das bundle Verzeichnis der neuen Version geändert.
+ln -sfn "${_dir_}/bundle" "$HOME/wekan/current"
+
+
+# … um sicherzustellen, dass der service up & running ist.
+if restart_wekan; then
+
+	# Falls alles gut aussieht, gibt es eine Nachricht …
+	tput smso; echo -e "\n We're done--wekan is up to date, exiting now.\n\n"; tput rmso
+
+else
+	# … andernfalls wird die alte node Version wiederhergestellt,
+	# der Symlink zurückgedreht und der Service erneut gestartet.
+	tput bel; tput smso; tput setaf 1; echo -e "\n Something went wrong--returning now to the former version.\n\n"; tput rmso; tput sgr0
+fi
+
+# Das war's!
+exit 0
