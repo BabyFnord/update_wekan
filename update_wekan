@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Uberspace 7: Wekan Update Skript v1.1
+# Uberspace 7: Wekan Update Skript
 # This script updates or reverts updates (initiated by this script) to wekan.
 # To install wekan, if you haven't already, see https://lab.uberspace.de/guide_wekan.html
 # v1.0 12.04.2021 created by Kim Diallo/Uberspace.de
@@ -216,5 +216,5 @@ else
 	tput bel; tput smso; tput setaf 1; echo -e "\n Something went wrong--returning now to the former version.\n\n"; tput rmso; tput sgr0
 fi
 
-# Das war's!
+# That's all, folks.
 exit 0
