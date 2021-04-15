@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
-# Uberspace 7: Wekan Update Skript
-# This script updates or reverts updates (initiated by this script) to wekan.
-# To install wekan, if you haven't already, see https://lab.uberspace.de/guide_wekan.html
+# uberspace-update_wekan
+# This script updates or reverts updates (initiated by this script) to wekan installations hosted on Uberspace 7.
+# See https://wekan.github.io for Wekan, and https://uberspace.de/de/ for cli-friendly hosting on Steroids.
+# To install wekan on Uberspace 7 hosted domains, if you haven't already, see https://lab.uberspace.de/guide_wekan.html
 # v1.0 12.04.2021 created by Kim Diallo/Uberspace.de
 # v1.1 13.04.2021 revised by Patrick Raddatz
-# v1.3 15.04.2021 improved by Kim Diallo
+# v1.3 15.04.2021 improved by Kim Diallo and Patrick Raddatz
 
 # Error and var handling (see details at https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html)
 set -eauo pipefail
