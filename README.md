@@ -5,9 +5,9 @@ Wekan is an open-source kanban board which allows a card-based task and to-do ma
 
 Usage:
 update_wekan [options]
---debug							Print various debugging information to stdout.
---reinstall					Remove folder of current latest wekan if present, and perform a fresh install
+--debug		Print various debugging information to stdout.
+--reinstall					Remove folder of current latest wekan if present, and perform a fresh install.  
 --revert [version]	Roll back to given wekan version, if specified folder exists. If called without specifc version, the penultimate is put back into operation.
---help							Print this help text and exit.
+--help							Print this help text and exit.  
 
 To update an existing installation, put this script into ~/bin and make it executable (chmod +x ~/bin/update_wekan). Run 'update_wekan' (without quotes) and wait for the script to complete.
