@@ -1,15 +1,99 @@
-uberspace-update_wekan
-======================
-Facilitates (*ie. eases*) updates of existing Wekan installations on Uberspace 7 hosted domains. 
+# uberspace-update_wekan
 
-Wekan is an open-source kanban board which allows a card-based task and to-do management. Visit https://wekan.github.io for an in-depth overview. To install Wekan in the first place, see https://lab.uberspace.de/guide_wekan.html for instructions. Kindly coded by Kim Diallo at uberspace.de. Translation, minor text updates and testing provided by BabyFnord. Currently tested working with Wekan v5.17 > v5.27 > v5.28 …
+Facilitates (*ie. eases*) updates of existing Wekan installations on Uberspace.
 
-Usage
------
-update_wekan [options]  
-    --debug		Print various debugging information to stdout.  
-    --reinstall					Remove folder of current latest wekan if present, and perform a fresh install.  
-    --revert [version]	Roll back to given wekan version, if specified folder exists. If called without specifc version, the penultimate is put back into operation.  
-    --help							Print this help text and exit.  
+## About
 
-To update an existing installation, put this script into *~/bin* and make it executable (chmod +x ~/bin/update_wekan). Run *update_wekan* and wait for the script to complete. 
+Wekan is an open-source kanban board which allows a card-based task and to-do management. This script is intended to make it easier to keep an existing instance up to date.
+
+## Getting started
+
+### Requirements
+
+A working wekan instance. -  To install Wekan in the first place, see [this guide](https://lab.uberspace.de/guide_wekan.html) for instructions.
+
+### Get update_wekan
+
+* Download the latest version from the [release page](https://github.com/BabyFnord/uberspace-update_wekan/releases) and unzip it or clone this git and enter the directory:
+
+  ```bash
+  git clone https://github.com/BabyFnord/uberspace-update_wekan.git && cd $(basename $_ .git)
+  ```
+
+* Copy the script and make it executable
+
+  ```bash
+  cp update_wekan ~/bin && chmod +x ~/bin/update_wekan
+  ```
+
+### Usage
+
+To download, build and switch to latest wekan version just run the script
+
+```bash
+update_wekan
+```
+
+For more information on usage, just ask the script itself
+
+```bash
+update_wekan --help
+```
+
+#### Features
+
+The main function of this script is to download, install and test the latest wekan version to an uberspace account, and then
+upgrade the running instance to the latest version.
+
+The currently supported options:
+
+1. `--debug`
+Make the output verbose.
+
+1. `--reinstall`
+Remove folder of current lattest wekan if present and perform a fresh clean install
+
+1. `--revert [version]`
+Roll back to choosen wekan version if related folder is presend. If called without
+specifc version, the penultimate one is put back into operation.
+
+1. `--help`
+Print usage information
+
+#### Automation
+
+***Keep in mind that this script is still new and maybe not that stable -
+so if you decide to automate it you should realy keep an eye on it***
+
+To fully automate the process, let it run by crond. For example, to update every night
+at 3:15 a.m., add this to your crontab:
+
+```bash
+# Perform wekan upadets automatically with https://github.com/BabyFnord/uberspace-update_wekan
+15 03 * * * $HOME/bin/update_wekan
+```
+
+Help to the crontab syntax can be found on [crontab.guru](https://crontab.guru/) if it doesn't fit at 3:15 a.m. .
+
+## Contribute
+
+Constructive [issues](https://github.com/BabyFnord/uberspace-update_wekan/issues) and [pull requestst](https://github.com/BabyFnord/uberspace-update_wekan/pulls) are welcome.
+
+## Related
+
+### Related Projects
+
+* [wekan](https://wekan.github.io) - What it is all about
+* [uberspace](https://uberspace.de) - Hosted on asteroids
+* [crontab.guru](https://crontab.guru/) - mentioned as an aid
+* [markdownlint](https://github.com/markdownlint/markdownlint) - lint what you are reading
+
+### Credits
+
+Translation, minor text updates and testing provided by [BabyFnord](https://github.com/BabyFnord)
+
+Kindly coded by [Kim Diallo](https://diallo.kim)
+
+### Achievements
+
+Currently tested working with Wekan v5.17 > v5.27 > v5.28 …
