@@ -2,7 +2,7 @@ uberspace-update_wekan
 ======================
 Facilitates (*ie. eases*) updates of existing Wekan installations on Uberspace 7 hosted domains. 
 
-Wekan is an open-source kanban board which allows a card-based task and to-do management. Visit https://wekan.github.io for an in-depth overview. To install Wekan in the first place, see https://lab.uberspace.de/guide_wekan.html for instructions. Kindly coded by Kim Diallo at uberspace.de. Translation and minor text updates provided by BabyFnord.
+Wekan is an open-source kanban board which allows a card-based task and to-do management. Visit https://wekan.github.io for an in-depth overview. To install Wekan in the first place, see https://lab.uberspace.de/guide_wekan.html for instructions. Kindly coded by Kim Diallo at uberspace.de. Translation, minor text updates and testing provided by BabyFnord. Currently tested working with Wekan v5.27 > v5.28 …
 
 Usage
 -----
