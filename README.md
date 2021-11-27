@@ -1,6 +1,6 @@
 # uberspace-update_wekan
 
-Facilitates (*ie. eases*) updates of existing Wekan installations on Uberspace.
+Easily update existing wekan installations on Uberspace 7 spaces.
 
 ## About
 
@@ -84,16 +84,16 @@ Constructive [issues](https://github.com/BabyFnord/uberspace-update_wekan/issues
 ### Related Projects
 
 * [wekan](https://wekan.github.io) - What it is all about
-* [uberspace](https://uberspace.de) - Hosted on asteroids
+* [uberspace](https://uberspace.de) - Hosting on Asteroids
 * [crontab.guru](https://crontab.guru/) - mentioned as an aid
 * [markdownlint](https://github.com/markdownlint/markdownlint) - lint what you are reading
 
 ### Credits
 
-Translation, minor text updates and testing provided by [BabyFnord](https://github.com/BabyFnord)
+Coded by [Kim Diallo](https://diallo.kim)
 
-Kindly coded by [Kim Diallo](https://diallo.kim)
+Translation, minor updates, testing by [BabyFnord](https://github.com/BabyFnord)
 
 ### Achievements
 
-Currently tested working with Wekan v5.17 > v5.27 > v5.28 …
+update_wekan worked fine with Wekan v5.17 > v5.27 > v5.28. At this time, upgrading from wekan v5.28 onwards requires a hack (see https://github.com/BabyFnord/update_wekan/issues/4#issuecomment-980735972 for details).
