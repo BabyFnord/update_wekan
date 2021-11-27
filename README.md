@@ -1,4 +1,4 @@
-# uberspace-update_wekan
+# update_wekan
 
 Easily update existing wekan installations on Uberspace 7 spaces.
 
@@ -96,4 +96,4 @@ Translation, minor updates, testing by [BabyFnord](https://github.com/BabyFnord)
 
 ### Achievements
 
-update_wekan worked fine with Wekan v5.17 > v5.27 > v5.28. At this time, upgrading from wekan v5.28 onwards requires a hack (see https://github.com/BabyFnord/update_wekan/issues/4#issuecomment-980735972 for details).
+update_wekan worked fine with Wekan v5.17 > v5.27 > v5.28. Currently, upgrading from wekan v5.28 onwards requires a hack (see https://github.com/BabyFnord/update_wekan/issues/4#issuecomment-980735972 for details).
