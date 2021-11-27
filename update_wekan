@@ -7,7 +7,8 @@
 # v1.1 13.04.2021 revised by Patrick Raddatz
 # v1.3 15.04.2021 improved by Kim Diallo and Patrick Raddatz
 # v1.5 03.05.2021 Code completed by Kim Diallo, revised translation by Patrick Raddatz
-# v1.6 25.11.2021 Minor cosmetic changes by Patrick Raddatz (--help now exits gracefully … plus a few comments altered)
+# v1.6 25.11.2021 Minor cosmetic changes (--help now exits gracefully, a few comments altered)
+# v1.7 27.11.2021 Fixing EACCESS
 
 # Error and var handling (see details at https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html)
 set -eauo pipefail
@@ -293,6 +294,11 @@ done
 # Enter the installation directory and execute npm from a subshell,
 # keeping our main shell in start directory.
 (
+
+# Fixing EACCESS
+chmod -R ug=rwX "$HOME"/wekan
+chmod -R o= "$HOME"/wekan
+
 		cd "${_install_dir_}"
     npm install node-gyp node-pre-gyp fibers
 )
