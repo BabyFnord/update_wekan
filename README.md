@@ -62,22 +62,22 @@ Print usage information
 
 #### Automation
 
-***Keep in mind that this script is still new and maybe not that stable -
-so if you decide to automate it you should realy keep an eye on it***
+***Keep in mind that this script is still new and maybe not that stable—
+if you decide to automate updates, check your logs***
 
 To fully automate the process, let it run by crond. For example, to update every night
 at 3:15 a.m., add this to your crontab:
 
 ```bash
-# Perform wekan upadets automatically with https://github.com/BabyFnord/uberspace-update_wekan
+# Perform wekan updates automagically with https://github.com/BabyFnord/uberspace-update_wekan
 15 03 * * * $HOME/bin/update_wekan
 ```
 
-Help to the crontab syntax can be found on [crontab.guru](https://crontab.guru/) if it doesn't fit at 3:15 a.m. .
+Help to the crontab syntax can be found on [crontab.guru](https://crontab.guru/) for a different setting.
 
 ## Contribute
 
-Constructive [issues](https://github.com/BabyFnord/uberspace-update_wekan/issues) and [pull requestst](https://github.com/BabyFnord/uberspace-update_wekan/pulls) are welcome.
+Constructive [issues](https://github.com/BabyFnord/uberspace-update_wekan/issues) and [pull requests](https://github.com/BabyFnord/uberspace-update_wekan/pulls) are welcome.
 
 ## Related
 
@@ -92,7 +92,7 @@ Constructive [issues](https://github.com/BabyFnord/uberspace-update_wekan/issues
 
 Coded by [Kim Diallo](https://diallo.kim)
 
-Translation, minor updates, testing by [BabyFnord](https://github.com/BabyFnord)
+Translation, maintenance and testing by [BabyFnord](https://github.com/BabyFnord)
 
 ### Achievements
 
