@@ -48,32 +48,31 @@ upgrade the running instance to the latest version.
 The currently supported options:
 
 1. `--debug`
-Make the output verbose.
+Print debugging information to stdout.
 
 1. `--reinstall`
-Remove folder of current lattest wekan if present and perform a fresh clean install
+Remove the current wekan if present, and perform a fresh install.
 
 1. `--revert [version]`
-Roll back to choosen wekan version if related folder is presend. If called without
-specifc version, the penultimate one is put back into operation.
+Roll back to given wekan version, if the specified folder exists.
+If called without specifc version, the penultimate is put back into operation.
 
 1. `--help`
-Print usage information
+Print this help text.
 
 #### Automation
 
-***Keep in mind that this script is still new and maybe not that stable—
-if you decide to automate updates, check your logs***
+***If you decide to automate updates, be sure to check your logs in case of inconsistencies!***
 
-To fully automate the process, let it run by crond. For example, to update every night
-at 3:15 a.m., add this to your crontab:
+Automatic updates can set up with crond. 
+Example: To run the script every night at 3:15 am, add this to your crontab:
 
 ```bash
-# Perform wekan updates automagically with https://github.com/BabyFnord/uberspace-update_wekan
+# Perform wekan updates automagically with https://github.com/BabyFnord/update_wekan
 15 03 * * * $HOME/bin/update_wekan
 ```
 
-Help to the crontab syntax can be found on [crontab.guru](https://crontab.guru/) for a different setting.
+Read more about crontab options here [crontab.guru](https://crontab.guru/).
 
 ## Contribute
 
@@ -90,9 +89,8 @@ Constructive [issues](https://github.com/BabyFnord/uberspace-update_wekan/issues
 
 ### Credits
 
-Coded by [Kim Diallo](https://diallo.kim)
-
-Translation, maintenance and testing by [BabyFnord](https://github.com/BabyFnord)
+Coded by [Kim Diallo](https://diallo.kim).
+Translation, fixes and testing by [BabyFnord](https://github.com/BabyFnord)
 
 ### Achievements
 
