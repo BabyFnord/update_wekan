@@ -96,4 +96,4 @@ Translation, maintenance and testing by [BabyFnord](https://github.com/BabyFnord
 
 ### Achievements
 
-update_wekan worked fine with Wekan v5.17 > v5.27 > v5.28. Currently, upgrading from wekan v5.28 onwards requires just a few extra steps (as documented in https://github.com/BabyFnord/update_wekan/issues/4#issuecomment-980735972).
+Confirmed working, tested by upgrading from wekan-v5.82 → 5.83.
