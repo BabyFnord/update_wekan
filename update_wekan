@@ -1,14 +1,10 @@
 #!/usr/bin/env bash
-# uberspace-update_wekan
-# This script updates or reverts updates (initiated by this script) to wekan installations hosted on Uberspace 7.
-# See https://wekan.github.io for Wekan, and https://uberspace.de/de/ for cli-friendly hosting on Steroids.
-# To install wekan on Uberspace 7 hosted domains, if you haven't already, see https://lab.uberspace.de/guide_wekan.html
-# v1.0 12.04.2021 created by Kim Diallo/Uberspace.de
-# v1.1 13.04.2021 revised by Patrick Raddatz
-# v1.3 15.04.2021 improved by Kim Diallo and Patrick Raddatz
-# v1.5 03.05.2021 Code completed by Kim Diallo, revised translation by Patrick Raddatz
-# v1.6 25.11.2021 Minor cosmetic changes (--help now exits gracefully, a few comments altered)
-# v1.7 27.11.2021 Fixing EACCESS
+# update_wekan (see https://github.com/BabyFnord/update_wekan/)
+# This script performs various update procedures to wekan installations
+# hosted on Uberspace 7 webspaces.
+# See https://wekan.github.io/ for wekan, an Open-Source kanban board,
+# and https://uberspace.de/ for cli-friendly hosting on Steroids.
+# v1.8 01.12.2021 Fixes by BabyFnord
 
 # Error and var handling (see details at https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html)
 set -eauo pipefail
@@ -37,20 +33,22 @@ done
 # Store usage message in a var
 _usage_="
 
-    update_wekan (v1.6)     Keeping wekan on Uberspace 7 up-to-date, the easy way!
+    update_wekan (v1.8)     Keeping wekan on Uberspace 7 up-to-date, the easy way!
+		                        See https://wekan.github.io/ for wekan, an Open-Source kanban board, or
+														https://github.com/BabyFnord/update_wekan/ for updates to this script.
 
     Usage:                  update_wekan [options]
 
     Options:
 
-        --debug             Print various debugging information to stdout.
+        --debug             Print debugging information to stdout.
 
-        --reinstall         Remove folder of current latest wekan if present, and perform a fresh install
+        --reinstall         Remove the current wekan if present, and perform a fresh install.
 
-        --revert [version]  Roll back to given wekan version, if specified folder exists.
+        --revert [version]  Roll back to given wekan version, if the specified folder exists.
                             If called without specifc version, the penultimate is put back into operation.
 
-        --help              Print this help text and exit.
+        --help              Print this help text.
 
 
 "
@@ -300,7 +298,9 @@ chmod -R ug=rwX "$HOME"/wekan
 chmod -R o= "$HOME"/wekan
 
 		cd "${_install_dir_}"
+		npm uninstall fibers
     npm install node-gyp node-pre-gyp fibers
+		npm audit fix --force
 )
 
 
