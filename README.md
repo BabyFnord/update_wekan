@@ -1,10 +1,6 @@
 # update_wekan
 
-Easily update existing wekan installations on Uberspace 7 spaces.
-
-## About
-
-Wekan is an open-source kanban board which allows a card-based task and to-do management. This script is intended to make it easier to keep an existing instance up to date.
+[Wekan](https://wekan.github.io) is an open-source kanban board. This script automates installations hosted on Uberspace 7.
 
 ## Getting started
 
