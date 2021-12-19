@@ -1,18 +1,18 @@
 # update_wekan
 
-[WeKan](https://wekan.github.io) is an open-source kanban board. This script automates installations hosted on Uberspace 7.
+[WeKan](https://wekan.github.io) is an open-source kanban board. This script automates upgrades to installations hosted on Uberspace 7.
 
 ## Getting started
 
 ### Requirements
 
-A working WeKan instance. -  To install WeKan in the first place, see [this guide](https://lab.uberspace.de/guide_wekan.html) for instructions.
+A working WeKan instance. To install WeKan in the first place, see [this guide](https://lab.uberspace.de/guide_wekan.html).
 
 ### Get update_wekan
 
-* Download the latest version from the [release page](https://github.com/BabyFnord/uberspace-update_wekan/releases) and unzip it or clone this git and enter the directory:
+* Download the latest version from the [release page](https://github.com/BabyFnord/update_wekan/releases), unzip it or clone this git and enter the directory:
   ```bash
-  git clone https://github.com/BabyFnord/uberspace-update_wekan.git && cd $(basename $_ .git)
+  git clone https://github.com/BabyFnord/update_wekan.git && cd $(basename $_ .git)
   ```
 
 * Copy the script and make it executable:
@@ -34,8 +34,6 @@ update_wekan --help
 
 #### Features
 
-The purpose of this script is to download, unpack and upgrade a working WeKan installation to the latest version. 
-
 Available options:
 1. `--debug`
 Print debugging information to stdout.
@@ -54,13 +52,13 @@ Print this help text.
 
 ***If you decide to automate updates, check your logs in case of inconsistencies!***
 
-Automatic updates can set up with crond. Example: To run the script every night at 3:15 am, add this to your crontab:
+Automatic updates can be set up with crond. Example: To run the script every night at 3:15 am, add this to your crontab:
 ```bash
 # Perform WeKan updates automagically with https://github.com/BabyFnord/update_wekan
 15 03 * * * $HOME/bin/update_wekan
 ```
 
-Read more about crontab options here [crontab.guru](https://crontab.guru/).
+Read more about crontab options at [crontab.guru](https://crontab.guru/).
 
 ## Contribute
 
@@ -78,8 +76,8 @@ Constructive [issues](https://github.com/BabyFnord/uberspace-update_wekan/issues
 ### Credits
 
 Coded by [Kim Diallo](https://diallo.kim).
-Translation, fixes, testing by [BabyFnord](https://github.com/BabyFnord)
+Translation, testing and ongoing development by [BabyFnord](https://github.com/BabyFnord)
 
 ### Achievements
 
-Confirmed working and tested with (the currently latest) WeKan v5.84.
+Confirmed working up to the current WeKan v5.86.
