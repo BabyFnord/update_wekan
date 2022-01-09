@@ -80,4 +80,4 @@ Translation, testing and ongoing development by [BabyFnord](https://github.com/B
 
 ### Achievements
 
-Confirmed working up to the current WeKan v5.86.
+Tested working including latest WeKan v5.90.0
