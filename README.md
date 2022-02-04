@@ -74,8 +74,8 @@ Constructive [issues](https://github.com/BabyFnord/uberspace-update_wekan/issues
 
 ### Credits
 
-Coded by [Kim Diallo](https://diallo.kim).
-Translation, testing and ongoing development by [BabyFnord](https://github.com/BabyFnord)
+Initially kindly coded by [Kim Diallo](https://diallo.kim).
+Translation and ongoing development by [BabyFnord](https://github.com/BabyFnord)
 
 ### Achievements
 
