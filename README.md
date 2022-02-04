@@ -79,4 +79,4 @@ Translation and ongoing development by [BabyFnord](https://github.com/BabyFnord)
 
 ### Achievements
 
-Tested working including latest WeKan v5.98.
+Tested working including latest WeKan v5.99.
