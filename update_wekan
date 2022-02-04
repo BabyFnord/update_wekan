@@ -4,7 +4,7 @@
 # hosted on Uberspace 7 webspaces.
 # See https://wekan.github.io/ for wekan, an Open-Source kanban board,
 # and https://uberspace.de/ for cli-friendly hosting on Steroids.
-# v1.8 01.12.2021 Fixes by BabyFnord
+# v1.9 04.02.2022 by BabyFnord, based on the prior work of Kim Diallo.
 
 # Error and var handling (see details at https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html)
 set -eauo pipefail
@@ -33,8 +33,8 @@ done
 # Store usage message in a var
 _usage_="
 
-    update_wekan (v1.8)     Keeping wekan on Uberspace 7 up-to-date, the easy way!
-		                        See https://wekan.github.io/ for wekan, an Open-Source kanban board, or
+    update_wekan (v1.9)     Keeping wekan on Uberspace 7 up-to-date, the easy way!
+		                        See https://wekan.github.io/ for WeKan, an open source Kanban board, or
 														https://github.com/BabyFnord/update_wekan/ for updates to this script.
 
     Usage:                  update_wekan [options]
@@ -43,9 +43,9 @@ _usage_="
 
         --debug             Print debugging information to stdout.
 
-        --reinstall         Remove the current wekan if present, and perform a fresh install.
+        --reinstall         Remove the current WeKan if present, and perform a fresh install.
 
-        --revert [version]  Roll back to given wekan version, if the specified folder exists.
+        --revert [version]  Roll back to an existing WeKan version.
                             If called without specifc version, the penultimate is put back into operation.
 
         --help              Print this help text.
@@ -105,13 +105,13 @@ function revert () {
 
         # Check if wekan service is running.
         if restart_wekan; then
-            tput smso; echo -e "\n We're done--wekan is operational ${_revert_version_}, exiting now.\n\n"; tput rmso
+            tput smso; echo -e "\n We're done--WeKan is operational ${_revert_version_}, exiting now.\n\n"; tput rmso
         else
-            tput bel; tput smso; tput setaf 1; echo -e "\n Oops, something went wrong--wekan service isn't running.\n\n"; tput rmso; tput sgr0
+            tput bel; tput smso; tput setaf 1; echo -e "\n Oops, something went wrong--WeKan service isn't running.\n\n"; tput rmso; tput sgr0
             return 1
         fi
     else
-        tput bel; tput smso; tput setaf 1; echo -e "\n Install directory to selected wekan version present in $HOME/wekan.\n\n"; tput rmso; tput sgr0
+        tput bel; tput smso; tput setaf 1; echo -e "\n Install directory to selected WeKan version present in $HOME/wekan.\n\n"; tput rmso; tput sgr0
         return 1
     fi
 
@@ -206,7 +206,7 @@ fi
 
 
 # Stores our current wekan version in a variable.
-_version_="$(curl --silent https://releases.wekan.team/ |grep -oEm 1 wekan\-[0-9]+\.[0-9]+\.zip)"
+_version_="wekan-$(curl --silent https://github.com/wekan/wekan/releases/latest |grep -oEm 1 [0-9]+\.[0-9]+[0-9]).zip"
 
 
 # Determines the download URL by means of this variable.
@@ -317,12 +317,12 @@ ln -sfn "${_dir_}/bundle" "$HOME/wekan/current"
 if restart_wekan; then
 
     # Success? Let's report ...
-    tput smso; echo -e "\n We're done--wekan is up to date, exiting now.\n\n"; tput rmso
+    tput smso; echo -e "\n We're done--WeKan is up to date, exiting now.\n\n"; tput rmso
 
 else
 	# ... if not, roll back to the old node version, undo the symlink
 	# change and restart the service.
-    tput bel; tput smso; tput setaf 1; echo -e "\n Something went wrong--returning now to the former version.\n\n"; tput rmso; tput sgr0
+    tput bel; tput smso; tput setaf 1; echo -e "\n Oops, something went wrong--returning now to the former version.\n\n"; tput rmso; tput sgr0
 fi
 
 # That's all, folks.
