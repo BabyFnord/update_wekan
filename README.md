@@ -1,6 +1,6 @@
 # update_wekan
 
-[WeKan](https://wekan.github.io) is an open-source kanban board. This script automates updates of installations hosted on Uberspace 7.
+[WeKan](https://wekan.github.io) is an open-source kanban board. This script automates updates of installations hosted on Uberspace 7, and is being tested with every new WeKan version, and updated if necessary. A good practice is to be aware of major changes in WeKan's dependencies like Node.js before starting the script, as some prerequisites——like in the case of Node.js—— switching major versions like v12.x to v14.x _could_ break other apps on your server, which the script cannot be aware of.
 
 ## Getting started
 
@@ -79,4 +79,4 @@ Translation and ongoing development by [BabyFnord](https://github.com/BabyFnord)
 
 ### Achievements
 
-Tested working since v5.8x, including latest WeKan v6.03.
+Tested working since v5.8x. 
