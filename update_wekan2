@@ -4,7 +4,7 @@
 # hosted on Uberspace 7 webspaces.
 # See https://wekan.github.io/ for wekan, an Open-Source kanban board,
 # and https://uberspace.de/ for cli-friendly hosting on Steroids.
-# v1.9 04.02.2022 by BabyFnord, based on the prior work of Kim Diallo.
+# v2.0alpha 06.04.2022 by BabyFnord, based on the prior work of Kim Diallo.
 
 # Error and var handling (see details at https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html)
 set -eauo pipefail
@@ -104,15 +104,15 @@ function revert () {
 
 
         # Check if wekan service is running.
-        if restart_wekan; then
-            tput smso; echo -e "\n We're done--WeKan is operational ${_revert_version_}, exiting now.\n\n"; tput rmso
-        else
-            tput bel; tput smso; tput setaf 1; echo -e "\n Oops, something went wrong--WeKan service isn't running.\n\n"; tput rmso; tput sgr0
-            return 1
-        fi
-    else
-        tput bel; tput smso; tput setaf 1; echo -e "\n Install directory to selected WeKan version present in $HOME/wekan.\n\n"; tput rmso; tput sgr0
-        return 1
+        # if restart_wekan; then
+            tput smso; echo -e "\n We're done--WeKan ${_revert_version_} is operational, exiting now.\n\n"; tput rmso
+    #     else
+    #         tput bel; tput smso; tput setaf 1; echo -e "\n Oops, something went wrong--WeKan service isn't running.\n\n"; tput rmso; tput sgr0
+    #         return 1
+    #     fi
+    # else
+    #     tput bel; tput smso; tput setaf 1; echo -e "\n Install directory to selected WeKan version present in $HOME/wekan.\n\n"; tput rmso; tput sgr0
+    #     return 1
     fi
 
     return 0
@@ -120,64 +120,64 @@ function revert () {
 
 
 # This function monitors the proper supervisorctl sequence (stopping > updating > starting).
-function restart_wekan () {
+# function restart_wekan () {
 
-    # Prior check, whether wekan is running at all.
-    if $(supervisorctl status wekan |grep -q 'RUNNING'); then
+    # # Prior check, whether wekan is running at all.
+    # if $(supervisorctl status wekan |grep -q 'RUNNING'); then
+		#
+    #     # If it is, store the PID in local var.
+    #     local _pid_="$(supervisorctl pid wekan)"
+		#
+    #     # Now stop wekan.
+    #     supervisorctl stop wekan
+		#
+    #     # Wait until we're done.
+    #     while kill -0 "${_pid_}" 2> /dev/null; do
+    #         :
+    #     done
+		#
+    # fi
+		#
+    # # Update and start the wekan service.
+    # supervisorctl update wekan
+		#
+    # # Wait again, until we're done, avoiding any collisions.
+    # sleep 1
+		#
+    # # Let's start once more.
+    # supervisorctl start wekan
+		#
+    # # Set its new PID to a variable.
+    #     local _pid_="$(supervisorctl pid wekan)"
+		#
+    # # Wait once more, just to be safe.
+    # sleep 10
+		#
+    # # Checking whether wekan service is up & running with the same PID. Return 0 if it is, or 1 if not.
+    # if $(supervisorctl status wekan |grep -q 'RUNNING'); then
+		#
+    #     if [[ "${_pid_}" == "$(supervisorctl pid wekan)" ]]; then
+    #         return 0
+    #     else
+    #         return 1
+    #     fi
+    # else
+    #     return 1
+    # fi
 
-        # If it is, store the PID in local var.
-        local _pid_="$(supervisorctl pid wekan)"
-
-        # Now stop wekan.
-        supervisorctl stop wekan
-
-        # Wait until we're done.
-        while kill -0 "${_pid_}" 2> /dev/null; do
-            :
-        done
-
-    fi
-
-    # Update and start the wekan service.
-    supervisorctl update wekan
-
-    # Wait again, until we're done, avoiding any collisions.
-    sleep 1
-
-    # Let's start once more.
-    supervisorctl start wekan
-
-    # Set its new PID to a variable.
-        local _pid_="$(supervisorctl pid wekan)"
-
-    # Wait once more, just to be safe.
-    sleep 10
-
-    # Checking whether wekan service is up & running with the same PID. Return 0 if it is, or 1 if not.
-    if $(supervisorctl status wekan |grep -q 'RUNNING'); then
-
-        if [[ "${_pid_}" == "$(supervisorctl pid wekan)" ]]; then
-            return 0
-        else
-            return 1
-        fi
-    else
-        return 1
-    fi
-
-    }
-
-
+    # }
 
 
-# Checking whether wekan service is up & running with the same PID. Return 0 if it is, or 1 if not.
-if [[ "${#}" -gt 0 ]]; then
 
 
-    if [[ "${1}" = "--help" ]]; then
-    	usage
-			exit 0
-    fi
+# # Checking whether wekan service is up & running with the same PID. Return 0 if it is, or 1 if not.
+# if [[ "${#}" -gt 0 ]]; then
+#
+#
+#     if [[ "${1}" = "--help" ]]; then
+#     	usage
+# 			exit 0
+#     fi
 
 
     # Checking whether script was called with '--debug'. If it was, enable verbose stdout and trim the debug arg from $@.
@@ -202,7 +202,7 @@ if [[ "${#}" -gt 0 ]]; then
             exit 1
         fi
     fi
-fi
+# fi
 
 
 # Stores our current wekan version in a variable.
@@ -242,7 +242,7 @@ else
 	# If the directory doesn't exist yet, let's create it.
     	mkdir -p "${_dir_}"
    else
-      tput bel; tput smso; tput setaf 1; echo -e "\nwekan now needs node-v"${_node_wekan_}". If you like, run : \n\n\tuberspace tools version use node "${_node_wekan_}" \n\nand than give this scrpt another try.\n"; tput rmso; tput sgr0
+      tput bel; tput smso; tput setaf 1; echo -e "\nwekan now needs node-v"${_node_wekan_}". If you like, run : \n\n\tuberspace tools version use node "${_node_wekan_}" \n\nand than give this script another try.\n"; tput rmso; tput sgr0
 
    fi
 fi
@@ -314,16 +314,19 @@ ln -sfn "${_dir_}/bundle" "$HOME/wekan/current"
 
 
 # Checking whether wekan service is up & running.
-if restart_wekan; then
+# if restart_wekan; then
+
+# NEW STYLE STARTUP PROCEDURE
+# tmux new ~/wekan/start-wekan2.sh
 
     # Success? Let's report ...
-    tput smso; echo -e "\n We're done--WeKan is up to date, exiting now.\n\n"; tput rmso
+    tput smso; echo -e "\n We're done--WeKan is up to date. Run 'tmux new -s wekan ~/wekan/start-wekan2.sh' to start WeKan. Exiting now.\n\n"; tput rmso
 
-else
-	# ... if not, roll back to the old node version, undo the symlink
-	# change and restart the service.
-    tput bel; tput smso; tput setaf 1; echo -e "\n Oops, something went wrong--returning now to the former version.\n\n"; tput rmso; tput sgr0
-fi
+# else
+# 	# ... if not, roll back to the old node version, undo the symlink
+# 	# change and restart the service.
+#     tput bel; tput smso; tput setaf 1; echo -e "\n Oops, something went wrong--returning now to the former version.\n\n"; tput rmso; tput sgr0
+# fi
 
 # That's all, folks.
 exit 0
