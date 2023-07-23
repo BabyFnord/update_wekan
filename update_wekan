@@ -2,7 +2,7 @@
 # update_wekan (see https://github.com/BabyFnord/update_wekan/)
 # This script performs various update procedures to wekan installations hosted on Uberspace 7 webspaces.
 # See https://wekan.github.io/ for wekan, an Open-Source kanban board.
-# v2.0 alpha 27.03.2023 by BabyFnord, based on the prior work of Kim Diallo at uberspace.de
+# v6.0.0 23.07.2023 by BabyFnord, based on the prior work of Kim Diallo at uberspace.de
 
 # Uncomment below for shell debugging
 # set -x
@@ -13,30 +13,30 @@ set -eauo pipefail
 # Declare array with all variables used on runtime, to ease pre-exit cleanup.
 declare -a _VARS_=(
 
-	 "_build_dir_"
-	 "_dir_"
-	 "_former_version_"
-	 "_install_dir_"
-	 "_node_current_"
-	 "_node_version_"
-	 "_node_wekan_"
-	 "_pid_"
-	 "_revert_version_"
-	 "_url_"
-	 "_usage_"
-	)
+     "_build_dir_"
+     "_dir_"
+     "_former_version_"
+     "_install_dir_"
+     "_node_current_"
+     "_node_version_"
+     "_node_wekan_"
+     "_pid_"
+     "_revert_version_"
+     "_url_"
+     "_usage_"
+    )
 
 # Declare all vars
-for var in ${_VARS_[@]}; do 		# SC2068 - no quotes expand into multiple other arguments
-	declare "${var}"
+for var in ${_VARS_[@]}; do         # SC2068 - no quotes expand into multiple other arguments
+    declare "${var}"
 done
 
 # Store usage message in a var
 _usage_="
 
-    update_wekan 				    Keeping wekan on Uberspace 7 up-to-date, the easy way!
-		(v2.0 alpha)            See https://wekan.github.io/ for WeKan, an open source Kanban board, or
-														https://github.com/BabyFnord/update_wekan/ for updates to this script.
+    update_wekan                     Keeping wekan on Uberspace 7 up-to-date, the easy way!
+        (v6)            See https://wekan.github.io/ for WeKan, an open source Kanban board, or
+                                                        https://github.com/BabyFnord/update_wekan/ for updates to this script.
 
     Usage:                  update_wekan [options]
 
@@ -45,9 +45,6 @@ _usage_="
         --debug             Print debugging information to stdout.
 
         --reinstall         Remove the current WeKan if present, and perform a fresh install.
-
-        --revert [version]  Roll back to an existing WeKan version.
-                            If called without specifc version, the penultimate is put back into operation.
 
         --help              Print this help text.
 
@@ -58,28 +55,28 @@ _usage_="
 # Print usage
 function usage () {
 
-	# Use of this script only makes sense in a loginshell
-	if [ -t ]; then
-		printf '\n%s\n' "${_usage_}"
-	fi
+    # Use of this script only makes sense in a loginshell
+    if [ -t ]; then
+        printf '\n%s\n' "${_usage_}"
+    fi
     }
 
 
 # Function to grant clean exits all time
 function error_exit () {
 
-	# Remove created folders
-	rm -rf "${_build_dir_}"
-	rm -rf "${_dir_}"
+    # Remove created folders
+    rm -rf "${_build_dir_}"
+    rm -rf "${_dir_}"
 
-	# Unset used vars
-	unset ${_VARS_[@]}           # SC2068 - no quotes expand into multiple other arguments
+    # Unset used vars
+    unset ${_VARS_[@]}           # SC2068 - no quotes expand into multiple other arguments
 
-	# Unset vars array
-	unset _VARS_
+    # Unset vars array
+    unset _VARS_
 
-	# Definitely return error to trigger bash's builtin 'set -e'
-	return 1
+    # Definitely return error to trigger bash's builtin 'set -e'
+    return 1
 }
 
 
@@ -98,7 +95,7 @@ function revert () {
         local _node_version_="$(cat "${_dir_}"/NODE_VERSION)"
 
         # Set the needed node version.
-        uberspace tools version use node "${_node_version_}"
+        # uberspace tools version use node "${_node_version_}"
 
         # Point the 'current' symlink to given version.
         ln -sfn "${_dir_}/bundle" "$HOME"/wekan/current
@@ -111,9 +108,9 @@ function revert () {
     #         tput bel; tput smso; tput setaf 1; echo -e "\n Oops, something went wrong--WeKan service isn't running.\n\n"; tput rmso; tput sgr0
     #         return 1
     #     fi
-    # else
-    #     tput bel; tput smso; tput setaf 1; echo -e "\n Install directory to selected WeKan version present in $HOME/wekan.\n\n"; tput rmso; tput sgr0
-    #     return 1
+    else
+        tput bel; tput smso; tput setaf 1; echo -e "\n Install directory to selected WeKan version present in $HOME/wekan.\n\n"; tput rmso; tput sgr0
+        return 1
     fi
 
     return 0
@@ -125,38 +122,38 @@ function revert () {
 
     # # Prior check, whether wekan is running at all.
     # if $(supervisorctl status wekan |grep -q 'RUNNING'); then
-		#
+        #
     #     # If it is, store the PID in local var.
     #     local _pid_="$(supervisorctl pid wekan)"
-		#
+        #
     #     # Now stop wekan.
     #     supervisorctl stop wekan
-		#
+        #
     #     # Wait until we're done.
     #     while kill -0 "${_pid_}" 2> /dev/null; do
     #         :
     #     done
-		#
+        #
     # fi
-		#
+        #
     # # Update and start the wekan service.
     # supervisorctl update wekan
-		#
+        #
     # # Wait again, until we're done, avoiding any collisions.
     # sleep 1
-		#
+        #
     # # Let's start once more.
     # supervisorctl start wekan
-		#
+        #
     # # Set its new PID to a variable.
     #     local _pid_="$(supervisorctl pid wekan)"
-		#
+        #
     # # Wait once more, just to be safe.
     # sleep 10
-		#
+        #
     # # Checking whether wekan service is up & running with the same PID. Return 0 if it is, or 1 if not.
     # if $(supervisorctl status wekan |grep -q 'RUNNING'); then
-		#
+        #
     #     if [[ "${_pid_}" == "$(supervisorctl pid wekan)" ]]; then
     #         return 0
     #     else
@@ -176,8 +173,8 @@ function revert () {
 #
 #
 #     if [[ "${1}" = "--help" ]]; then
-#     	usage
-# 			exit 0
+#         usage
+#             exit 0
 #     fi
 
 
@@ -189,28 +186,32 @@ function revert () {
 
 
 
-    # Checking whether script was called with '--revert'. If it was, only revert to a given version and exit.
-    if [[ "${@}" == "--revert" ]]; then
-
-        if [[ "${#}" -lt 2 ]]; then
-            tput bel; tput smso; tput setaf 1; echo -e "\n Unable to revert, please try: \n\t wekan_update --revert [old version] \n\n"; tput rmso; tput sgr0
-            exit 1
-        fi
-
-        if revert "${2}"; then
-            exit 0
-        else
-            exit 1
-        fi
-    fi
+    # # Checking whether script was called with '--revert'. If it was, only revert to a given version and exit.
+    # if [[ "${@}" == "--revert" ]]; then
+        #
+    #     if [[ "${#}" -lt 2 ]]; then
+    #         tput bel; tput smso; tput setaf 1; echo -e "\n Unable to revert, please try: \n\t update_wekan --revert [old version] \n\n"; tput rmso; tput sgr0
+    #         exit 1
+    #     fi
+        #
+    #     if revert "${2}"; then
+    #         exit 0
+    #     else
+    #         exit 1
+    #     fi
+    # fi
 # fi
 
 # Stores our current wekan version in a variable.
-## _version_="wekan-6.76.zip"
-_version_="wekan-$(curl --silent https://api.github.com/repos/wekan/wekan/tags |grep -oEm 1 [0-9]+\.[0-9]+[0-9]).zip"
+# _version_="wekan-6.89.zip" # only used if auto-download fails for some reason
+version=$(curl -sI https://github.com/wekan/wekan/releases/latest | awk -F '/' '/^location/ {print substr($NF, 1, length($NF)-1)}')
+version="${version#v}"
+_version_="wekan-$version.zip"
+echo "Version: $version"
 
 # Determines the download URL by means of this variable.
 _url_="https://releases.wekan.team/${_version_}"
+echo "Download URL is: $_url_"
 
 # Store path to version into variable.
 # First create the directory ~/wekan, subsequently a directory
@@ -220,10 +221,10 @@ _dir_="$HOME/wekan/${_version_/.zip/}"
 
 
 # Check for currently active node version, store result in a var.
-_node_current_="$( node -v|cut -d'v' -f2|cut -d'.' -f1)"
+# _node_current_="$( node -v|cut -d'v' -f2|cut -d'.' -f1)"
 
 # Acquire the recommended node version from wekan's dockerfile.
-_node_wekan_="$(curl --silent https://raw.githubusercontent.com/wekan/wekan/master/Dockerfile |grep -oEm 1 NODE_VERSION=v[0-9]+ |cut -d'v' -f2)" || true
+# _node_wekan_="$(curl --silent https://raw.githubusercontent.com/wekan/wekan/master/Dockerfile |grep -oEm 1 NODE_VERSION=v[0-9]+ |cut -d'v' -f2)" || true
 
 # If a directory, which has been stored in the variable, already exists,
 # we can refrain from building wekan and exit the script.
@@ -231,19 +232,19 @@ if [[ -d "${_dir_}" ]]; then
     if [[ "${@}" = *"--reinstall"* ]]; then
         rm -rf "${_dir_}"/*
     else
-    	tput smso; echo -e "\n Nothing to do, wekan is already up to date, exiting now.\n\n"; tput rmso
-    	exit 0
+        tput smso; echo -e "\n Nothing to do, wekan is already up to date, exiting now.\n\n"; tput rmso
+        exit 0
     fi
-else
-	## Compare both node versions. If there is a newer version available, we'll use it.
-	## Attention: This is a global change and affects all other software relying on node.
-   if [[ "${_node_wekan_}" == "${_node_current_}" ]]; then
-	# If the directory doesn't exist yet, let's create it.
-    	mkdir -p "${_dir_}"
-   else
-      tput bel; tput smso; tput setaf 1; echo -e "\nwekan now needs node-v"${_node_wekan_}". If you like, run : \n\n\tuberspace tools version use node "${_node_wekan_}" \n\nand than give this script another try.\n"; tput rmso; tput sgr0
-
-   fi
+# else
+    ## Compare both node versions. If there is a newer version available, we'll use it.
+    ## Attention: This is a global change and affects all other software relying on node.
+  #  if [[ "${_node_wekan_}" == "${_node_current_}" ]]; then
+    # # If the directory doesn't exist yet, let's create it.
+  #       mkdir -p "${_dir_}"
+  #  else
+  #     tput bel; tput smso; tput setaf 1; echo -e "\nwekan now needs node-v"${_node_wekan_}". If you like, run : \n\n\tuberspace tools version use node "${_node_wekan_}" \n\nand than give this script another try.\n"; tput rmso; tput sgr0
+    #
+  #  fi
 fi
 
 
@@ -266,26 +267,26 @@ rm -r "${_build_dir_}"
 
 # Let's store the required node version,
 # in case we need to roll back at some point.
-echo "${_node_wekan_}" >> "${_dir_}"/NODE_VERSION
+# echo "${_node_wekan_}" >> "${_dir_}"/NODE_VERSION
 
 # Store the installation directory in a variable, npm needs to be executed from there.
 _install_dir_="${_dir_}/bundle/programs/server"
 
 # Store some files, which would interfere with a rebuild, in an array.
-declare -a _FILES_TO_REMOVE_=(
-
-    "${_install_dir_}/node_modules/.bin/node-gyp"
-    "${_install_dir_}/node_modules/.bin/node-pre-gyp"
-    "${_install_dir_}/node_modules/chalk/node_modules/.bin/strip-ansi"
-)
+# declare -a _FILES_TO_REMOVE_=(
+#
+#     "${_install_dir_}/node_modules/.bin/node-gyp"
+#     "${_install_dir_}/node_modules/.bin/node-pre-gyp"
+#     "${_install_dir_}/node_modules/chalk/node_modules/.bin/strip-ansi"
+# )
 
 
 # If those interfering files exist, remove them.
-for file in ${_FILES_TO_REMOVE_[@]}; do     # SC2068 - no quotes expand into multiple other arguments
-    if [ -f "${file}" ]; then
-        rm "${file}"
-    fi
-done
+# for file in ${_FILES_TO_REMOVE_[@]}; do     # SC2068 - no quotes expand into multiple other arguments
+#     if [ -f "${file}" ]; then
+#         rm "${file}"
+#     fi
+# done
 
 
 # Enter the installation directory and execute npm from a subshell,
@@ -296,10 +297,18 @@ done
 chmod -R ug=rwX "$HOME"/wekan
 chmod -R o= "$HOME"/wekan
 
-		cd "${_install_dir_}"
-		npm uninstall fibers
-    npm install node-gyp node-pre-gyp fibers
-		npm audit fix --force
+# This code block had been used to compile fibers, as fibers provided by WeKan is non-functional.
+        # cd "${_install_dir_}"
+        # "$HOME"/opt/node14.21.3/bin/npm uninstall fibers
+        # "$HOME"/opt/node14.21.3/bin/npm install node-gyp node-pre-gyp fibers
+        # "$HOME"/opt/node14.21.3/bin/npm audit fix --force
+        # npm uninstall fibers
+        # npm install node-gyp node-pre-gyp fibers
+        # npm audit fix --force
+
+# For now, we copy over a previous compiled version of fibers.
+        rm -rf "${_install_dir_}/node_modules/fibers"
+        cp -R "$HOME"/wekan/wekan-6.86/bundle/programs/server/node_modules/fibers "${_install_dir_}/node_modules"
 )
 
 
@@ -316,14 +325,14 @@ ln -sfn "${_dir_}/bundle" "$HOME/wekan/current"
 # if restart_wekan; then
 
 # NEW STYLE STARTUP PROCEDURE
-# tmux new ~/wekan/start-wekan2.sh
+# tmux new ~/wekan/start-wekan3.sh
 
     # Success? Let's report ...
-    tput smso; echo -e "\n We're done--WeKan is up to date. Run 'tmux new -s wekan ~/wekan/start-wekan2.sh' to start WeKan. Exiting now.\n\n"; tput rmso
+    tput smso; echo -e "\n We're done--WeKan is up to date. Run 'tmux new -s wekan ~/wekan/start-wekan3.sh' to start WeKan. Exiting now.\n\n"; tput rmso
 
 # else
-# 	# ... if not, roll back to the old node version, undo the symlink
-# 	# change and restart the service.
+#     # ... if not, roll back to the old node version, undo the symlink
+#     # change and restart the service.
 #     tput bel; tput smso; tput setaf 1; echo -e "\n Oops, something went wrong--returning now to the former version.\n\n"; tput rmso; tput sgr0
 # fi
 
