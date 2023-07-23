@@ -1,15 +1,17 @@
 # update_wekan
 
-[WeKan](https://wekan.github.io) is an open-source kanban board. This script automates updates of installations hosted on Uberspace 7, and is being tested with every new WeKan version, and updated if necessary. A good practice is to be aware of major changes in WeKan's dependencies like Node.js before starting the script, as some prerequisites—like in the case of Node.js— switching major versions like v12.x to v14.x _could_ break other apps on your server, which the script cannot be aware of.
+[WeKan](https://wekan.github.io) is an open-source kanban board. This script automates updating a bundle-based WeKan instance hosted on Uberspace 7. To install WeKan in the first place, see [this guide](https://lab.uberspace.de/guide_wekan.html).
 
 NOTA BENE
-Please note, that with the changes introduced (around 2022) in the way WeKan handles attachments, and the reported transitional problems, updating and (re-)starting WeKan now has changed significantly. update_wekan3 works at this time, but you might need to run the script a couple of times until a successful connection to the code server is established. Use at your own risk, yet is is unlikely any harm would be done to an existing installation. If you like to chime in and help in completing the script, you are most welcome!
+This script is _work in progress_ and WeKan is frequently being updated. Some introduced changes to WeKan were quite problematic when run as a bundle-install on U7, the script now provides workarounds for a robust instance. Some previous features of the script are broken, I'll fix them when I have the time and knowledge to do so. 
+
+Be aware it _might_ happen that a new version won't run at first, needs some fixes to the startup-script or whatever 🤷🏻‍♂️. Preventing a failover, the script puts each installed version into its own subfolder and creates a symlink `current` to be referenced elsewhere (ie. for [Document Root](https://manual.uberspace.de/web-documentroot/)). If a new version won't run, you can simply revert the symlink to a previous version, and run the startup-script again. Use at your own risk. Yet is is unlikely any harm would be done to an existing installation. 
 
 ## Getting started
 
 ### Requirements
 
-A working WeKan instance. To install WeKan in the first place, see [this guide](https://lab.uberspace.de/guide_wekan.html).
+A working WeKan instance to be found at `~/wekan/` and working Node.js 14.21.3. The latter is unsupported (EOL) on Uberspace 7, you need to manually install it. The workaround is to put Node.js 14.21.3 at `~/opt/node14.21.3` and instead of building `fibers` (which will fail at startup time), and to copy the required Node `fibers` from a previous version v6.86 into the downloaded WeKan folder. The adapted startup-script and fibers version will be provided at a later stage …
 
 ### Get update_wekan
 
@@ -25,59 +27,47 @@ A working WeKan instance. To install WeKan in the first place, see [this guide](
 
 ### Usage
 
-Run the script (via SSH in your Uberspace shell) in order to download, build and switch over to the latest WeKan version:
+SSH into your Uberspace shell. Stop the current WeKan instance by typing `tmux attach`, choose `wekan` and stop the process by pressing `CTRL-B` then `D`. Now run the script in order to download, build and switch over to the latest WeKan version:
 ```bash
-update_wekan3
+update_wekan
 ```
+Run 'tmux new -s wekan ~/wekan/start-wekan3.sh' to start WeKan.
 
 More information available by asking the script for help:
 ```bash
-update_wekan3 --help
+update_wekan --help
 ```
 
 #### Features
 
 Available options:
-1. `--debug`
+1. `--debug` _NOT WORKING RELIABLY AT PRESENT_
 Print debugging information to stdout.
 
-1. `--reinstall`
+1. `--reinstall` _NOT WORKING RELIABLY AT PRESENT_
 Remove the current wekan if present, and perform a fresh install.
 
-1. `--revert [version]`
+1. `--revert [version]` _NOT WORKING RELIABLY AT PRESENT_
 Roll back to given wekan version, if the specified folder exists.
 If called without specifc version, the penultimate is put back into operation.
 
 1. `--help`
 Print this help text.
 
-#### Automation
-
-***If you decide to automate updates, check your logs in case of inconsistencies!***
-
-Automatic updates can be set up with crond. Example: To run the script every night at 3:15 am, add this to your crontab:
-```bash
-# Perform WeKan updates automagically with https://github.com/BabyFnord/update_wekan
-15 03 * * * $HOME/bin/update_wekan
-```
-
-Read more about crontab options at [crontab.guru](https://crontab.guru/).
 
 ## Contribute
 
-Constructive [issues](https://github.com/BabyFnord/uberspace-update_wekan/issues) and [pull requests](https://github.com/BabyFnord/uberspace-update_wekan/pulls) are welcome.
+In its current state, the script is a hack and does _not_ provide reliable features beyond the update procedure. Some broken and inactive code exists, waiting to be fixed. Post your [issues](https://github.com/BabyFnord/uberspace-update_wekan/issues) and [pull requests](https://github.com/BabyFnord/uberspace-update_wekan/pulls) are welcome.
 
 ## Related
 
 ### Related Projects
 
 * [uberspace](https://uberspace.de) - Hosting on Asteroids
-* [crontab.guru](https://crontab.guru/) - mentioned as an aid
-* [markdownlint](https://github.com/markdownlint/markdownlint) - lint what you are reading
 
 ### Credits
 
-Initially kindly coded by [Kim Diallo](https://diallo.kim).
+Initially kindly coded by [Kim Diallo](https://diallo.kim), though abandoned long ago.
 Translation and ongoing development by [BabyFnord](https://github.com/BabyFnord)
 
 ### Achievements
