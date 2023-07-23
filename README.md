@@ -11,7 +11,7 @@ Be aware it _might_ happen that a new version won't run at first, needs some fix
 
 ### Requirements
 
-A working WeKan instance to be found at `~/wekan/` and working Node.js 14.21.3. The latter is unsupported (EOL) on Uberspace 7, you need to manually install it. The workaround is to put Node.js 14.21.3 at `~/opt/node14.21.3` and instead of building `fibers` (which will fail at startup time), and to copy the required Node `fibers` from a previous version v6.86 into the downloaded WeKan folder. The adapted startup-script and fibers version will be provided at a later stage …
+A working WeKan instance to be found at `~/wekan/` and working Node.js 14.21.3. The latter is unsupported (EOL) on Uberspace 7, you need to manually install it. The workaround is to put Node.js 14.21.3 at `~/opt/node14.21.3` and instead of building `fibers` (which will fail at startup time), and to copy the required Node `fibers` from a previous version v6.86 into the downloaded WeKan folder. The fibers version will be provided at a later stage …
 
 ### Get update_wekan
 
