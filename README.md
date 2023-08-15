@@ -56,7 +56,7 @@ Now you should have a working copy of Node.js v14.21.4 ready to be used with WeK
 
 ### Usage
 
-SSH into your Uberspace shell. Stop the current WeKan instance by typing `tmux attach`, choose `wekan` and stop the process by pressing `CTRL-B` then `D`. Now run the script in order to download, build and switch over to the latest WeKan version:
+SSH into your Uberspace shell. Stop the current WeKan instance by typing `tmux attach`, choose `wekan` and stop the process by pressing `CTRL-b` then `d`. Now run the script in order to download, build and switch over to the latest WeKan version:
 ```bash
 update_wekan
 ```
