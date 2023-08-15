@@ -11,7 +11,22 @@ Be aware it _might_ happen that a new version won't run at first, needs some fix
 
 ### Requirements
 
-A working WeKan instance to be found at `~/wekan/` and working Node.js 14.21.3. The latter is unsupported (EOL) on Uberspace 7, you need to manually install it. The workaround is to put Node.js 14.21.3 at `~/opt/node14.21.3` and instead of building `fibers` (which will fail at startup time), and to copy the required Node `fibers` from a previous version v6.86 into the downloaded WeKan folder. The fibers version will be provided at a later stage …
+A working WeKan instance to be found at `~/wekan/` and working Node.js 14.21.4. The latter is an unofficial Node.js version, which you need to install (see below for instructions), furthermore, Node.js 14.21.3 and .4 are unsupported (as in EOL) on Uberspace 7. Hence, you need to manually install that: The workaround is to put Node.js 14.21.4 at `~/opt/node14.21.4` and instead of building `fibers` (which will fail at startup time), and to copy the required Node `fibers` from a previous version v6.86 into the downloaded WeKan folder. The fibers version will be provided at a later stage …
+
+#### Install Node.js v14.21.4
+
+Copy and paste this line-by-line into your shell:
+```
+$ VERSION="14.21.4"
+$ SOURCE="https://github.com/wekan/node-v14-esm/releases/download/v14.21.4/node-v14.21.4-linux-x64.tar.gz"
+$ DEST="${HOME}/opt/node${VERSION}"
+$ mkdir --parents "${DEST}"
+$ wget "${SOURCE}"
+$ tar zxvf "node-v${VERSION}-linux-x64.tar.gz"
+$ mv "node-v${VERSION}-linux-x64/"* "${DEST}/"
+$ rm -rf "node-v${VERSION}-linux-x64" "node-v${VERSION}-linux-x64.tar.gz"
+```
+Now you should have a working copy of Node.js v14.21.4 ready to be used with WeKan >= v7.02.
 
 ### Get update_wekan
 
