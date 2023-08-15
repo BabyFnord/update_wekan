@@ -534,9 +534,9 @@
       # Add more Node heap:
       export NODE_OPTIONS="--max_old_space_size=4096"
       # Add more stack:
-      # bash -c "ulimit -s 65500; exec /home/isabell/opt/node14.21.3/bin/node main.js"
-      bash -c "ulimit -s 65500; cd /home/isabell/wekan/current exec /home/isabell/opt/node14.21.3/bin/node main.js"
-      /home/isabell/opt/node14.21.3/bin/node main.js
+      # bash -c "ulimit -s 65500; exec /home/isabell/opt/node14.21.4/bin/node main.js"
+      bash -c "ulimit -s 65500; cd /home/isabell/wekan/current exec /home/isabell/opt/node14.21.4/bin/node main.js"
+      /home/isabell/opt/node14.21.4/bin/node main.js
       #---------------------------------------------------------------------
       # & >> ../../wekan.log
       cd ../..
