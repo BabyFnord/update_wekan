@@ -2,7 +2,7 @@
 # update_wekan (see https://github.com/BabyFnord/update_wekan/)
 # This script performs various update procedures to wekan installations hosted on Uberspace 7 webspaces.
 # See https://wekan.github.io/ for wekan, an Open-Source kanban board.
-# v6.0.0 23.07.2023 by BabyFnord, based on the prior work of Kim Diallo at uberspace.de
+# v6.0.1 15.08.2023 by BabyFnord, based on the prior work of Kim Diallo at uberspace.de
 
 # Uncomment below for shell debugging
 # set -x
@@ -325,10 +325,10 @@ ln -sfn "${_dir_}/bundle" "$HOME/wekan/current"
 # if restart_wekan; then
 
 # NEW STYLE STARTUP PROCEDURE
-# tmux new ~/wekan/start-wekan4.sh
+# tmux new ~/wekan/start-wekan.sh
 
     # Success? Let's report ...
-    tput smso; echo -e "\n We're done--WeKan is up to date. Run 'tmux new -s wekan ~/wekan/start-wekan4.sh' to start WeKan. Exiting now.\n\n"; tput rmso
+    tput smso; echo -e "\n We're done--WeKan is up to date. Run 'tmux new -s wekan ~/wekan/start-wekan.sh' to start WeKan. Exiting now.\n\n"; tput rmso
 
 # else
 #     # ... if not, roll back to the old node version, undo the symlink
