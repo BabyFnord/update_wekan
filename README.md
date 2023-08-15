@@ -46,7 +46,7 @@ SSH into your Uberspace shell. Stop the current WeKan instance by typing `tmux a
 ```bash
 update_wekan
 ```
-Run 'tmux new -s wekan ~/wekan/start-wekan3.sh' to start WeKan.
+Run 'tmux new -s wekan ~/wekan/start-wekan.sh' to start WeKan.
 
 More information available by asking the script for help:
 ```bash
