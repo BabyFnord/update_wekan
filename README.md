@@ -3,9 +3,9 @@
 [WeKan](https://wekan.github.io) is an open-source kanban board. This script automates updating a bundle-based WeKan instance hosted on Uberspace 7. To install WeKan in the first place, see [this guide](https://lab.uberspace.de/guide_wekan.html).
 
 NOTA BENE
-This script is _work in progress_ and WeKan is frequently being updated. Some introduced changes to WeKan were quite problematic when run as a bundle-install on U7, the script now provides workarounds for a robust instance. Some previous features of the script are broken, I'll fix them when I have the time and knowledge to do so. 
+This script is _work in progress_ as WeKan is frequently being updated. Some changes introduced to WeKan became problematic for bundle-installs on U7, this script provides some workarounds for that. Some extra features of the script currently are broken, I'll fix them when I have the time and knowledge to do so. 
 
-Be aware it _might_ happen that a new version won't run at first, needs some fixes to the startup-script or whatever 🤷🏻‍♂️. Preventing a failover, the script puts each installed version into its own subfolder and creates a symlink `current` to be referenced elsewhere (ie. for [Document Root](https://manual.uberspace.de/web-documentroot/)). If a new version won't run, you can simply revert the symlink to a previous version, and run the startup-script again. Use at your own risk. Yet is is unlikely any harm would be done to an existing installation. 
+It _might_ happen that WeKan introduces new features or dependencies and a new version won't run at first, needs some fixes to the startup-script or whatever 🤷🏻‍♂️. To prevent a failover, this script puts each installed version into its own subfolder ($HOME/wekan/wekan-{release version}/)and creates a symlink called `current` to be referenced elsewhere (ie. for [Document Root](https://manual.uberspace.de/web-documentroot/)). If needed, stop Wekan by typing `tmux attach` and when `tmux` shows the running script, press `CTRL+b`then `d`. Next you could revert the symlink to your preferred previous version, and run the startup-script again. 
 
 ## Getting started
 
@@ -16,21 +16,35 @@ A working WeKan instance to be found at `~/wekan/` and working Node.js 14.21.4. 
 #### Install Node.js v14.21.4
 
 Copy and paste this line-by-line into your shell:
+```bash
+VERSION="14.21.4"
 ```
-$ VERSION="14.21.4"
-$ SOURCE="https://github.com/wekan/node-v14-esm/releases/download/v14.21.4/node-v14.21.4-linux-x64.tar.gz"
-$ DEST="${HOME}/opt/node${VERSION}"
-$ mkdir --parents "${DEST}"
-$ wget "${SOURCE}"
-$ tar zxvf "node-v${VERSION}-linux-x64.tar.gz"
-$ mv "node-v${VERSION}-linux-x64/"* "${DEST}/"
-$ rm -rf "node-v${VERSION}-linux-x64" "node-v${VERSION}-linux-x64.tar.gz"
+```bash
+SOURCE="https://github.com/wekan/node-v14-esm/releases/download/v14.21.4/node-v14.21.4-linux-x64.tar.gz"
+```
+```bash
+DEST="${HOME}/opt/node${VERSION}"
+```
+```bash
+mkdir --parents "${DEST}"
+```
+```bash
+wget "${SOURCE}"
+```
+```bash
+tar zxvf "node-v${VERSION}-linux-x64.tar.gz"
+```
+```bash
+mv "node-v${VERSION}-linux-x64/"* "${DEST}/"
+```
+```bash
+rm -rf "node-v${VERSION}-linux-x64" "node-v${VERSION}-linux-x64.tar.gz"
 ```
 Now you should have a working copy of Node.js v14.21.4 ready to be used with WeKan >= v7.02.
 
-### Get update_wekan
+### Install update_wekan
 
-* Download the latest version from the [release page](https://github.com/BabyFnord/update_wekan/releases), unzip it or clone this git and enter the directory:
+* Download the current version ùpdate_wekan`, or clone this git and enter the directory:
   ```bash
   git clone https://github.com/BabyFnord/update_wekan.git && cd $(basename $_ .git)
   ```
@@ -52,23 +66,6 @@ More information available by asking the script for help:
 ```bash
 update_wekan --help
 ```
-
-#### Features
-
-Available options:
-1. `--debug` _NOT WORKING RELIABLY AT PRESENT_
-Print debugging information to stdout.
-
-1. `--reinstall` _NOT WORKING RELIABLY AT PRESENT_
-Remove the current wekan if present, and perform a fresh install.
-
-1. `--revert [version]` _NOT WORKING RELIABLY AT PRESENT_
-Roll back to given wekan version, if the specified folder exists.
-If called without specifc version, the penultimate is put back into operation.
-
-1. `--help`
-Print this help text.
-
 
 ## Contribute
 
