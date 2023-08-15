@@ -325,10 +325,10 @@ ln -sfn "${_dir_}/bundle" "$HOME/wekan/current"
 # if restart_wekan; then
 
 # NEW STYLE STARTUP PROCEDURE
-# tmux new ~/wekan/start-wekan3.sh
+# tmux new ~/wekan/start-wekan4.sh
 
     # Success? Let's report ...
-    tput smso; echo -e "\n We're done--WeKan is up to date. Run 'tmux new -s wekan ~/wekan/start-wekan3.sh' to start WeKan. Exiting now.\n\n"; tput rmso
+    tput smso; echo -e "\n We're done--WeKan is up to date. Run 'tmux new -s wekan ~/wekan/start-wekan4.sh' to start WeKan. Exiting now.\n\n"; tput rmso
 
 # else
 #     # ... if not, roll back to the old node version, undo the symlink
