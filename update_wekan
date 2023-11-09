@@ -2,7 +2,7 @@
 # update_wekan (see https://github.com/BabyFnord/update_wekan/)
 # This script performs various update procedures to wekan installations hosted on Uberspace 7 webspaces.
 # See https://wekan.github.io/ for wekan, an Open-Source kanban board.
-# v6.0.2 04.11.2023 by BabyFnord, based on the prior work of Kim Diallo at uberspace.de
+# v6.0.3 09.11.2023 by BabyFnord, based on the prior work of Kim Diallo at uberspace.de
 
 # Uncomment below for shell debugging
 # set -x
@@ -166,6 +166,20 @@ function revert () {
     # }
 
 
+# If a wekan session is running, ask user to terminate wekan gracefully or to exit the script.
+    if tmux ls |grep -q 'wekan'; then
+        tput smso; echo -e "\n A tmux session for WeKan is still running.\n\n"; tput rmso
+        while true; do
+            read -p "We need to terminate WeKan before upgrading. Proceed? (y/n) " yn
+            case $yn in
+                [Yy]* ) tmux send-keys -t wekan C-c; tmux kill-session -t wekan; break;;
+                [Nn]* ) exit;;
+                * ) echo "Please answer yes or no.";;
+            esac
+        done
+    fi
+
+
 
 # Checking whether script was called with '--debug'. If it was, enable verbose stdout and trim the debug arg from $@.
 if [[ "${@}" = *"--debug"* ]]; then
@@ -238,6 +252,8 @@ _build_dir_="$(mktemp --directory --tmpdir wekan.XXX)"
 # Remove the obsolete tempdir.
 rm -r "${_build_dir_}"
 
+# Store the installation directory in a variable.
+_install_dir_="${_dir_}/bundle/programs/server"
 
 (
 # Fixing EACCESS
