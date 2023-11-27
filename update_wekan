@@ -2,7 +2,7 @@
 # update_wekan (see https://github.com/BabyFnord/update_wekan/)
 # This script performs various update procedures to wekan installations hosted on Uberspace 7 webspaces.
 # See https://wekan.github.io/ for wekan, an Open-Source kanban board.
-# v6.0.3 09.11.2023 by BabyFnord, based on the prior work of Kim Diallo at uberspace.de
+# v6.0.4 27.11.2023 by BabyFnord, based on the prior work of Kim Diallo at uberspace.de
 
 # Uncomment below for shell debugging
 # set -x
@@ -246,7 +246,7 @@ _build_dir_="$(mktemp --directory --tmpdir wekan.XXX)"
 (
     cd "${_build_dir_}"
     wget "${_url_}"
-    unzip "${_version_}" -d "${_dir_}"
+    unzip -q "${_version_}" -d "${_dir_}"
 )
 
 # Remove the obsolete tempdir.
