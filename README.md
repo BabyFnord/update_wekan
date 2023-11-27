@@ -5,7 +5,7 @@
 NOTA BENE
 This script is _work in progress_ as WeKan is frequently being updated. Some changes introduced to WeKan became problematic for bundle-installs on U7, this script provides some workarounds for that. Some extra features of the script currently are broken, I'll fix them when I have the time and knowledge to do so. 
 
-It _might_ happen that WeKan introduces new features or dependencies and a new version won't run at first, needs some fixes to the startup-script or whatever 🤷🏻‍♂️. To prevent a failover, this script puts each installed version into its own subfolder ($HOME/wekan/wekan-{release version}/)and creates a symlink called `current` to be referenced elsewhere (ie. for [Document Root](https://manual.uberspace.de/web-documentroot/)). If needed, stop Wekan by typing `tmux attach` and when `tmux` shows the running script, press `CTRL+b`then `d`. Next you could revert the symlink to your preferred previous version, and run the startup-script again. 
+It _might_ happen that WeKan introduces new features or dependencies and a new version won't run at first, needs some fixes to the startup-script or whatever 🤷🏻‍♂️. To prevent a failover, this script puts each installed version into its own subfolder ($HOME/wekan/wekan-{release version}/)and creates a symlink called `current` to be referenced elsewhere (ie. for [Document Root](https://manual.uberspace.de/web-documentroot/)). If needed, stop Wekan by typing `tmux attach` and when `tmux` shows the running script, press `CTRL+b`then `d`. A next step could be to revert the symlink to your preferred previous version, and run the startup-script again. 
 
 ## Getting started
 
@@ -44,7 +44,7 @@ Now you should have a working copy of Node.js v14.21.4 ready to be used with WeK
 
 ### Install update_wekan
 
-* Download the current version ùpdate_wekan`, or clone this git and enter the directory:
+* Download the current version `update_wekan`, or clone this git and enter the directory:
   ```bash
   git clone https://github.com/BabyFnord/update_wekan.git && cd $(basename $_ .git)
   ```
@@ -56,20 +56,16 @@ Now you should have a working copy of Node.js v14.21.4 ready to be used with WeK
 
 ### Usage
 
-SSH into your Uberspace shell. Stop the current WeKan instance by typing `tmux attach`, choose `wekan` and stop the process by pressing `CTRL-b` then `d`. Now run the script in order to download, build and switch over to the latest WeKan version:
-```bash
-update_wekan
-```
-Run 'tmux new -s wekan ~/wekan/start-wekan.sh' to start WeKan.
+SSH into your Uberspace shell. Type `update_wekan`, the script will ask for your permission to stop a running WeKan instance initiated by tmux (any prior WeKan instance would have to be initiated using 'tmux new -s wekan ~/wekan/start-wekan.sh'). After this step, `update_wekan` does the fiddly update process automagically. Finally, the script asks whether it should start your new WeKan version in a new `tmux` session. To leave that session gracefully, type `CTRL-b` then `d` to return to the shell—WeKan is up and running the most recent version.
 
-More information available by asking the script for help:
+More information available by asking the script for help, but please remember for the time being, unfortunately any extra feature outside of a standard update process is non-functional:
 ```bash
 update_wekan --help
 ```
 
 ## Contribute
 
-In its current state, the script is a hack and does _not_ provide reliable features beyond the update procedure. Some broken and inactive code exists, waiting to be fixed. Post your [issues](https://github.com/BabyFnord/uberspace-update_wekan/issues) and [pull requests](https://github.com/BabyFnord/uberspace-update_wekan/pulls) are welcome.
+In its current state, the script does _not_ provide its prior extra features beyond its main job—which is automating the update procedure. Inactive code exists for those extra features, waiting to be fixed one of these days. Post your [issues](https://github.com/BabyFnord/uberspace-update_wekan/issues) when you have any, [pull requests](https://github.com/BabyFnord/uberspace-update_wekan/pulls) are welcome.
 
 ## Related
 
