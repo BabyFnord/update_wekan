@@ -2,7 +2,7 @@
 # update_wekan (see https://github.com/BabyFnord/update_wekan/)
 # This script performs various update procedures to wekan installations hosted on Uberspace 7 webspaces.
 # See https://wekan.github.io/ for wekan, an Open-Source kanban board.
-# v6.0.4 27.11.2023 by BabyFnord, based on the prior work of Kim Diallo at uberspace.de
+# v6.0.5 01.12.2023 by BabyFnord, based on the prior work of Kim Diallo at uberspace.de
 
 # Uncomment below for shell debugging
 # set -x
@@ -245,7 +245,9 @@ _build_dir_="$(mktemp --directory --tmpdir wekan.XXX)"
 # to execute that part in a subshell ( ).
 (
     cd "${_build_dir_}"
+    echo "Downloading wekan from $_url_"
     wget "${_url_}"
+    echo "Unzipping wekan to $_build_dir_"
     unzip -q "${_version_}" -d "${_dir_}"
 )
 
@@ -260,7 +262,7 @@ _install_dir_="${_dir_}/bundle/programs/server"
 chmod -R ug=rwX "$HOME"/wekan
 chmod -R o= "$HOME"/wekan
 
-# This code block had been used to compile fibers, when fibers provided by WeKan was non-functional.
+# This code block was needed to compile fibers, when fibers provided by WeKan was non-functional.
 # Compiling fibers on Uberspace stopped working, the code below is deprecated:
         # cd "${_install_dir_}"
         # "$HOME"/opt/node14.21.3/bin/npm uninstall fibers
@@ -271,6 +273,7 @@ chmod -R o= "$HOME"/wekan
         # npm audit fix --force
 
 # for now, we copy over a previous compiled version of fibers.
+echo "Copying fibers to $_install_dir_"
         rm -rf "${_install_dir_}/node_modules/fibers"
         cp -R "$HOME"/wekan/wekan-6.86/bundle/programs/server/node_modules/fibers "${_install_dir_}/node_modules"
 )
@@ -282,6 +285,7 @@ _former_version_="$(ls -la "$HOME"/wekan/current |cut -d'>' -f2)"
 
 
 # Now we're safe to point that symlink to the bundle directory of our new version.
+echo "Pointing symlink to $_dir_"
 ln -sfn "${_dir_}/bundle" "$HOME/wekan/current"
 
 
@@ -291,11 +295,11 @@ tput smso; echo -e "\n We're done--WeKan is up to date.\n\n"; tput rmso
 
 # Ask user to start wekan. If the answer is yes, start wekan. If the answer is no, exit. If the answer is anything else, ask again.
 while true; do
-    read -p "Do you want to start wekan now? (y/n)" yn
+    read -p "Do you want to start wekan now? (y/n) " yn
     case $yn in
         [Yy]* ) tmux new -s wekan ~/wekan/start-wekan.sh; break;;
         [Nn]* ) exit;;
-        * ) echo "Please answer yes or no.";;
+        * ) echo "Please answer yes or no (y/n).";;
     esac
 done
 
