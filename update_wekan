@@ -2,7 +2,7 @@
 # update_wekan (see https://github.com/BabyFnord/update_wekan/)
 # This script performs various update procedures to wekan installations hosted on Uberspace 7 webspaces.
 # See https://wekan.github.io/ for wekan, an Open-Source kanban board.
-# v6.0.6 10.06.2024 BabyFnord, based on prior work by Kim Diallo at uberspace.de
+# v6.0.7 10.06.2024 BabyFnord, based on prior work by Kim Diallo at uberspace.de
 
 # Uncomment below for shell debugging
 # set -x
@@ -222,7 +222,7 @@ echo "Download URL is: $_url_"
 # First create the directory ~/wekan, subsequently a directory
 # for said version, and finally the previous path, so we can
 # point a symlink to the new version after building it.
-_dir_="$HOME/wekan/${version/-amd64.zip/}"
+_dir_="$HOME/wekan/wekan-${version/.zip/}"
 
 
 # If a directory, which has been stored in the variable, already exists,
