@@ -2,7 +2,7 @@
 # update_wekan (see https://github.com/BabyFnord/update_wekan/)
 # This script performs various update procedures to wekan installations hosted on Uberspace 7 webspaces.
 # See https://wekan.github.io/ for wekan, an Open-Source kanban board.
-# v6.0.5 01.12.2023 by BabyFnord, based on the prior work of Kim Diallo at uberspace.de
+# v6.0.6 10.06.2024 BabyFnord, based on prior work by Kim Diallo at uberspace.de
 
 # Uncomment below for shell debugging
 # set -x
@@ -205,22 +205,24 @@ fi
     # fi
 # fi
 
+
 # Stores our current wekan version in a variable.
 # _version_="wekan-6.89.zip" # only used if auto-download fails for some reason
-version=$(curl -sI https://github.com/wekan/wekan/releases/latest | awk -F '/' '/^location/ {print substr($NF, 1, length($NF)-1)}')
-version="${version#v}"
-_version_="wekan-$version.zip"
+base_url="https://github.com/wekan/wekan/releases/download"
+version=$(curl --silent https://api.github.com/repos/wekan/wekan/releases | grep -oP '"tag_name":\s*"v\K[^"]+' | sort -h | tail -n1)
+
+_version_="wekan-$version-amd64.zip"
 echo "Version: $version"
 
 # Determines the download URL by means of this variable.
-_url_="https://releases.wekan.team/${_version_}"
+_url_="https://github.com/wekan/wekan/releases/download/v${version}/wekan-"${version}"-amd64.zip"
 echo "Download URL is: $_url_"
 
 # Store path to version into variable.
 # First create the directory ~/wekan, subsequently a directory
 # for said version, and finally the previous path, so we can
 # point a symlink to the new version after building it.
-_dir_="$HOME/wekan/${_version_/.zip/}"
+_dir_="$HOME/wekan/${version/-amd64.zip/}"
 
 
 # If a directory, which has been stored in the variable, already exists,
