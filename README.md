@@ -5,13 +5,17 @@
 NOTA BENE
 This script is _work in progress_ as WeKan is frequently being updated. Some changes introduced to WeKan became problematic for bundle-installs on U7, this script provides some workarounds for that. Some extra features of the script currently are broken, I'll fix them when I have the time and knowledge to do so. 
 
-It _might_ happen that WeKan introduces new features or dependencies and a new version won't run at first, needs some fixes to the startup-script or whatever 🤷🏻‍♂️. To prevent a failover, this script puts each installed version into its own subfolder ($HOME/wekan/wekan-{release version}/)and creates a symlink called `current` to be referenced elsewhere (ie. for [Document Root](https://manual.uberspace.de/web-documentroot/)). If needed, stop Wekan by typing `tmux attach` and when `tmux` shows the running script, press `CTRL+b`then `d`. A next step could be to revert the symlink to your preferred previous version, and run the startup-script again. 
+It _might_ happen that WeKan introduces new features or dependencies and a new version won't run at first, needs some fixes to the startup-script or whatever 🤷🏻‍♂️. To prevent a failover, this script puts each installed version into its own subfolder ($HOME/wekan/wekan-{release version}/)and creates a symlink called `current` to be referenced elsewhere (ie. for [Document Root](https://manual.uberspace.de/web-documentroot/)). In case a new WeKan version is troublesome, run `ln -sfn "$HOME/wekan/wekan-[your prior version no. here]/bundle" "$HOME/wekan/current"` to activate your preferred prior version. 
+
 
 ## Getting started
 
 ### Requirements
 
-A working WeKan instance to be found at `~/wekan/` and working Node.js 14.21.4. The latter is an unofficial Node.js version, which you need to install (see below for instructions), furthermore, Node.js 14.21.3 and .4 are unsupported (as in EOL) on Uberspace 7. Hence, you need to manually install that: The workaround is to put Node.js 14.21.4 at `~/opt/node14.21.4` and instead of building `fibers` (which will fail at startup time), and to copy the required Node `fibers` from a previous version v6.86 into the downloaded WeKan folder. The fibers version will be provided at a later stage …
+A working WeKan instance to be found at `~/wekan/` running as a `supervisord` service, using Node.js 14.21.4, which is a sepcial Node.js version supplied by WeKan as a requirement to run recent versions of WeKan. Node.js 14.21.4 is expected at `~/opt/node14.21.4` (see below for installation instructions if it isn't). Instead of building Node.js `fibers` (which will fail at startup time), `update_wekan` copies `fibers` over from a prior version v6.86 — for your convenience, download the supplied bare v6.86 containing said `fibers` and place it at `~/wekan/`. 
+
+Copy the startup-script `start-wekan.sh` into `$HOME/wekan/`. As a working WeKan instance is a requirement, it is expected that a `wekan.ini` is present at `~/etc/services.d/`.
+
 
 #### Install Node.js v14.21.4
 
