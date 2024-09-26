@@ -2,7 +2,7 @@
 # update_wekan (see https://github.com/BabyFnord/update_wekan/)
 # This script performs various update procedures to wekan installations hosted on Uberspace 7 webspaces.
 # See https://wekan.github.io/ for wekan, an Open-Source kanban board.
-# v6.0.7 10.06.2024 BabyFnord, based on prior work by Kim Diallo at uberspace.de
+# v6.1.0 26.09.2024 BabyFnord, based on prior work by Kim Diallo at uberspace.de
 
 # Uncomment below for shell debugging
 # set -x
@@ -35,7 +35,7 @@ done
 _usage_="
 
     update_wekan        Keeping wekan on Uberspace 7 up-to-date, the easy way!
-    (v6)                See https://wekan.github.io/ for WeKan, an open source Kanban board, or
+    (v6.1.0)            See https://wekan.github.io/ for WeKan, an open source Kanban board, or
                         https://github.com/BabyFnord/update_wekan/ for updates to this script.
 
     Usage:              update_wekan [options]
@@ -102,12 +102,12 @@ function revert () {
 
 
     # Check if wekan service is running.
-    # if restart_wekan; then
-            tput smso; echo -e "\n We're done--WeKan ${_revert_version_} is operational, exiting now.\n\n"; tput rmso
-    #     else
-    #         tput bel; tput smso; tput setaf 1; echo -e "\n Oops, something went wrong--WeKan service isn't running.\n\n"; tput rmso; tput sgr0
-    #         return 1
-    #     fi
+    if restart_wekan; then
+        tput smso; echo -e "\n We're done--WeKan ${_revert_version_} is operational, exiting now.\n\n"; tput rmso
+         else
+            tput bel; tput smso; tput setaf 1; echo -e "\n Oops, something went wrong--WeKan service isn't running.\n\n"; tput rmso; tput sgr0
+            return 1
+         fi
     else
         tput bel; tput smso; tput setaf 1; echo -e "\n Install directory to selected WeKan version present in $HOME/wekan.\n\n"; tput rmso; tput sgr0
         return 1
@@ -118,66 +118,79 @@ function revert () {
 
 
 # This function monitors the proper supervisorctl sequence (stopping > updating > starting).
-# function restart_wekan () {
+function restart_wekan () {
 
-    # # Prior check, whether wekan is running at all.
-    # if $(supervisorctl status wekan |grep -q 'RUNNING'); then
-        #
-    #     # If it is, store the PID in local var.
-    #     local _pid_="$(supervisorctl pid wekan)"
-        #
-    #     # Now stop wekan.
-    #     supervisorctl stop wekan
-        #
-    #     # Wait until we're done.
-    #     while kill -0 "${_pid_}" 2> /dev/null; do
-    #         :
-    #     done
-        #
-    # fi
-        #
-    # # Update and start the wekan service.
-    # supervisorctl update wekan
-        #
-    # # Wait again, until we're done, avoiding any collisions.
-    # sleep 1
-        #
-    # # Let's start once more.
-    # supervisorctl start wekan
-        #
-    # # Set its new PID to a variable.
-    #     local _pid_="$(supervisorctl pid wekan)"
-        #
-    # # Wait once more, just to be safe.
-    # sleep 10
-        #
-    # # Checking whether wekan service is up & running with the same PID. Return 0 if it is, or 1 if not.
-    # if $(supervisorctl status wekan |grep -q 'RUNNING'); then
-        #
-    #     if [[ "${_pid_}" == "$(supervisorctl pid wekan)" ]]; then
-    #         return 0
-    #     else
-    #         return 1
-    #     fi
-    # else
-    #     return 1
-    # fi
-
-    # }
-
-
-# If a wekan session is running, ask user to terminate wekan gracefully or to exit the script.
-    if tmux ls |grep -q 'wekan'; then
-        tput smso; echo -e "\n A tmux session for WeKan is still running.\n\n"; tput rmso
-        while true; do
-            read -p "We need to terminate WeKan before upgrading. Proceed? (y/n) " yn
-            case $yn in
-                [Yy]* ) tmux send-keys -t wekan C-c; tmux kill-session -t wekan; break;;
-                [Nn]* ) exit;;
-                * ) echo "Please answer yes or no.";;
-            esac
+ # Prior check, whether wekan is running at all.
+    if $(supervisorctl status wekan |grep -q 'RUNNING'); then
+    
+        # If it is, store the PID in local var.
+        local _pid_="$(supervisorctl pid wekan)"
+    
+        # Now stop wekan.
+        supervisorctl stop wekan
+        
+        # Wait until we're done.
+        while kill -0 "${_pid_}" 2> /dev/null; do
+            :
         done
+        
     fi
+    
+    # Update and start the wekan service.
+    supervisorctl update wekan
+    
+    # Wait again, until we're done, avoiding any collisions.
+    sleep 1
+    
+    # Let's start once more.
+    supervisorctl start wekan
+    
+    # Set its new PID to a variable.
+    local _pid_="$(supervisorctl pid wekan)"
+    
+    # Wait once more, just to be safe.
+    sleep 10
+    
+    # Checking whether wekan service is up & running with the same PID. Return 0 if it is, or 1 if not.
+    if $(supervisorctl status wekan |grep -q 'RUNNING'); then
+    
+       if [[ "${_pid_}" == "$(supervisorctl pid wekan)" ]]; then
+            return 0
+        else
+         return 1
+     fi
+    else
+     return 1
+    fi
+
+    }
+
+
+# # THIS CODE IS ONLY NEEDED FOR PRIOR STARTUP-SCRIPT VERSION
+# # If a wekan session is running, ask user to terminate wekan gracefully or to exit the script.
+#     if tmux ls |grep -q 'wekan'; then
+#         tput smso; echo -e "\n A tmux session for WeKan is still running.\n\n"; tput rmso
+#         while true; do
+#             read -p "We need to terminate WeKan before upgrading. Proceed? (y/n) " yn
+#             case $yn in
+#                 [Yy]* ) tmux send-keys -t wekan C-c; tmux kill-session -t wekan; break;;
+#                 [Nn]* ) exit;;
+#                 * ) echo "Please answer yes or no.";;
+#             esac
+#         done
+#     fi
+
+
+
+# Checking whether wekan service is up & running with the same PID. Return 0 if it is, or 1 if not.
+if [[ "${#}" -gt 0 ]]; then
+
+
+    if [[ "${1}" = "--help" ]]; then
+        usage
+            exit 0
+    fi
+fi
 
 
 
@@ -189,14 +202,14 @@ fi
 
 
 
-    # # Checking whether script was called with '--revert'. If it was, only revert to a given version and exit.
+    # Checking whether script was called with '--revert'. If it was, only revert to a given version and exit.
     # if [[ "${@}" == "--revert" ]]; then
-        #
+    #
     #     if [[ "${#}" -lt 2 ]]; then
     #         tput bel; tput smso; tput setaf 1; echo -e "\n Unable to revert, please try: \n\t update_wekan --revert [old version] \n\n"; tput rmso; tput sgr0
     #         exit 1
     #     fi
-        #
+    #
     #     if revert "${2}"; then
     #         exit 0
     #     else
@@ -292,25 +305,35 @@ ln -sfn "${_dir_}/bundle" "$HOME/wekan/current"
 
 
 
-# Success? Let's report ...
-tput smso; echo -e "\n We're done--WeKan is up to date.\n\n"; tput rmso
+# Checking whether wekan service is up & running.
+if restart_wekan; then
 
-# Ask user to start wekan. If the answer is yes, start wekan. If the answer is no, exit. If the answer is anything else, ask again.
-while true; do
-    read -p "Do you want to start wekan now? (y/n) " yn
-    case $yn in
-        [Yy]* ) tmux new -s wekan ~/wekan/start-wekan.sh; break;;
-        [Nn]* ) exit;;
-        * ) echo "Please answer yes or no (y/n).";;
-    esac
-done
+    # Success? Let's report ...
+    tput smso; echo -e "\n We're done--WeKan is up to date, exiting now.\n\n"; tput rmso
 
-# else
-#     # ... if not, roll back to the old node version, undo the symlink
-#     # change and restart the service.
-#     tput bel; tput smso; tput setaf 1; echo -e "\n Oops, something went wrong--returning now to the former version.\n\n"; tput rmso; tput sgr0
-# fi
+else
+    # ... if not, roll back to the old node version, undo the symlink
+    # change and restart the service.
+    tput bel; tput smso; tput setaf 1; echo -e "\n Oops, something went wrong--returning now to the former version.\n\n"; tput rmso; tput sgr0
+fi
+
+
+
+
+# # THIS CODE WAS NEEDED FOR PRIOR STARTUP-SCRIPT VERSION
+# # Ask user to start wekan. If the answer is yes, start wekan. If the answer is no, exit. If the answer is anything else, ask again.
+# while true; do
+#     read -p "Do you want to start wekan now? (y/n) " yn
+#     case $yn in
+#         [Yy]* ) tmux new -s wekan ~/wekan/start-wekan.sh; break;;
+#         [Nn]* ) exit;;
+#         * ) echo "Please answer yes or no (y/n).";;
+#     esac
+# done
+
+
 
 # Uncomment below in case of shell debugging
 # set +x
+
 exit 0
