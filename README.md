@@ -60,16 +60,16 @@ Now you should have a working copy of Node.js v14.21.4 ready to be used with WeK
 
 ### Usage
 
-SSH into your Uberspace shell. Type `update_wekan`, the script will ask for your permission to stop a running WeKan instance initiated by tmux (any prior WeKan instance would have to be initiated using 'tmux new -s wekan ~/wekan/start-wekan.sh'). After this step, `update_wekan` does the fiddly update process automagically. Finally, the script asks whether it should start your new WeKan version in a new `tmux` session. To leave that session gracefully, type `CTRL-b` then `d` to return to the shell—WeKan is up and running the most recent version.
+SSH into your Uberspace shell. Type `update_wekan` and relax while the script stops, upgrades and restarts WeKan to the most recent version.
 
-More information available by asking the script for help, but please remember for the time being, unfortunately any extra feature outside of a standard update process is non-functional:
+More information available by asking the script for help. 
 ```bash
 update_wekan --help
 ```
 
 ## Contribute
 
-In its current state, the script does _not_ provide its prior extra features beyond its main job—which is automating the update procedure. Inactive code exists for those extra features, waiting to be fixed one of these days. Post your [issues](https://github.com/BabyFnord/uberspace-update_wekan/issues) when you have any, [pull requests](https://github.com/BabyFnord/uberspace-update_wekan/pulls) are welcome.
+The extra feature `--revert` currently needs to be fixed, one of these days. Post your [issues](https://github.com/BabyFnord/uberspace-update_wekan/issues) when you have any, [pull requests](https://github.com/BabyFnord/uberspace-update_wekan/pulls) are welcome.
 
 ## Related
 
@@ -79,8 +79,7 @@ In its current state, the script does _not_ provide its prior extra features bey
 
 ### Credits
 
-Initially kindly coded by [Kim Diallo](https://diallo.kim), though abandoned long ago.
-Translation and ongoing development by [BabyFnord](https://github.com/BabyFnord)
+Initially kindly coded by [Kim Diallo](https://diallo.kim), translation and ongoing development by [BabyFnord](https://github.com/BabyFnord). Though abandoned by Kim long ago, I try to maintain and improve the script as good as someone without serious coding skills can.
 
 ### Achievements
 
