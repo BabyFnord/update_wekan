@@ -2,7 +2,7 @@
 # update_wekan (see https://github.com/BabyFnord/update_wekan/)
 # This script performs various update procedures to wekan installations hosted on Uberspace 7 webspaces.
 # See https://wekan.github.io/ for wekan, an Open-Source kanban board.
-# v6.1.0 26.09.2024 BabyFnord, based on prior work by Kim Diallo at uberspace.de
+# v6.1.1 21.10.2024 BabyFnord, based on prior work by Kim Diallo at uberspace.de
 
 # Uncomment below for shell debugging
 # set -x
@@ -35,7 +35,7 @@ done
 _usage_="
 
     update_wekan        Keeping wekan on Uberspace 7 up-to-date, the easy way!
-    (v6.1.0)            See https://wekan.github.io/ for WeKan, an open source Kanban board, or
+    (v6.1.1)            See https://wekan.github.io/ for WeKan, an open source Kanban board, or
                         https://github.com/BabyFnord/update_wekan/ for updates to this script.
 
     Usage:              update_wekan [options]
@@ -44,7 +44,10 @@ _usage_="
 
         --debug             Print debugging information to stdout.
 
-        --reinstall         [broken] Remove the current WeKan if present, and perform a fresh install.
+        --reinstall         Remove the current WeKan if present, and perform a fresh install.
+
+        --revert v[version] (currently broken) Roll back to an existing WeKan version.
+                            If called without specifc version, the penultimate is put back into operation.
 
         --help              Print this help text.
 
@@ -92,10 +95,10 @@ function revert () {
         local _dir_="$HOME/wekan/wekan-${_revert_version_}"
 
         # Store node version to run destination wekan to var.
-        local _node_version_="$(cat "${_dir_}"/NODE_VERSION)"
+        #local _node_version_="$(cat "${_dir_}"/NODE_VERSION)"
 
         # Set the needed node version.
-        # uberspace tools version use node "${_node_version_}"
+        #uberspace tools version use node "${_node_version_}"
 
         # Point the 'current' symlink to given version.
         ln -sfn "${_dir_}/bundle" "$HOME"/wekan/current
@@ -198,29 +201,24 @@ fi
 if [[ "${@}" = *"--debug"* ]]; then
     set -x
     set -- "${@%'--debug'}"
-fi
+ fi
 
 
 
     # Checking whether script was called with '--revert'. If it was, only revert to a given version and exit.
-    # if [[ "${@}" == "--revert" ]]; then
-    #
-    #     if [[ "${#}" -lt 2 ]]; then
-    #         tput bel; tput smso; tput setaf 1; echo -e "\n Unable to revert, please try: \n\t update_wekan --revert [old version] \n\n"; tput rmso; tput sgr0
-    #         exit 1
-    #     fi
-    #
-    #     if revert "${2}"; then
-    #         exit 0
-    #     else
-    #         exit 1
-    #     fi
-    # fi
-# fi
+     if [[ "${@}" == "--revert" ]]; then
+    
+       if [[ "${#}" -lt 2 ]]; then
+            tput bel; tput smso; tput setaf 1; echo -e "\n Unable to revert, please try: \n\t update_wekan --revert [old version] \n\n"; tput rmso; tput sgr0
+            exit 1
+         fi
+    
+         if revert "${2}"; then exit 0 else exit 1 fi fi
+ # fi
 
 
 # Stores our current wekan version in a variable.
-# _version_="wekan-6.89.zip" # only used if auto-download fails for some reason
+#version=7.57 # Uncomment this line and comment the two lines below, if auto-download fails or a specific version is required.
 base_url="https://github.com/wekan/wekan/releases/download"
 version=$(curl --silent https://api.github.com/repos/wekan/wekan/releases | grep -oP '"tag_name":\s*"v\K[^"]+' | sort -h | tail -n1)
 
