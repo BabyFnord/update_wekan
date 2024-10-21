@@ -3,9 +3,7 @@
 [WeKan](https://wekan.github.io) is an open-source kanban board. This script automates updating a bundle-based WeKan instance hosted on Uberspace 7. To install WeKan in the first place, see [this guide](https://lab.uberspace.de/guide_wekan.html).
 
 NOTA BENE
-This script is _work in progress_ as WeKan is frequently being updated. Some changes introduced to WeKan became problematic for bundle-installs on U7, this script provides some workarounds for that. Some extra features of the script currently are broken, I'll fix them when I have the time and knowledge to do so. 
-
-It _might_ happen that WeKan introduces new features or dependencies and a new version won't run at first, needs some fixes to the startup-script or whatever 🤷🏻‍♂️. To prevent a failover, this script puts each installed version into its own subfolder ($HOME/wekan/wekan-{release version}/)and creates a symlink called `current` to be referenced elsewhere (ie. for [Document Root](https://manual.uberspace.de/web-documentroot/)). In case a new WeKan version is troublesome, run `ln -sfn "$HOME/wekan/wekan-[your prior version no. here]/bundle" "$HOME/wekan/current"` to activate your preferred prior version. 
+This script is _work in progress_ as WeKan is frequently being updated. Some changes introduced to WeKan became problematic for bundle-installs on U7, this script provides some workarounds for that. One extra feature of the script remains broken for the time being (`--revert`), albeit not a critical one.
 
 
 ## Getting started
@@ -62,7 +60,9 @@ Now you should have a working copy of Node.js v14.21.4 ready to be used with WeK
 
 SSH into your Uberspace shell. Type `update_wekan` and relax while the script stops, upgrades and restarts WeKan to the most recent version.
 
-More information available by asking the script for help. 
+To prevent a failover whenever WeKan introduces new features or dependencies and a new version won't run at first, this script puts each installed version into its own subfolder ($HOME/wekan/wekan-{release version}/)and creates a symlink called `current` to be referenced elsewhere (ie. for [Document Root](https://manual.uberspace.de/web-documentroot/)). So, in case a new WeKan version is troublesome, just run `ln -sfn "$HOME/wekan/wekan-[your prior version no. here]/bundle" "$HOME/wekan/current"` and run `supervisorctl stop wekan && supervisorctl update wekan && supervisorctl start wekan`. 
+
+More information is available by asking the script for help. 
 ```bash
 update_wekan --help
 ```
