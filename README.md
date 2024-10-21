@@ -60,7 +60,17 @@ Now you should have a working copy of Node.js v14.21.4 ready to be used with WeK
 
 SSH into your Uberspace shell. Type `update_wekan` and relax while the script stops, upgrades and restarts WeKan to the most recent version.
 
-To prevent a failover whenever WeKan introduces new features or dependencies and a new version won't run at first, this script puts each installed version into its own subfolder ($HOME/wekan/wekan-{release version}/)and creates a symlink called `current` to be referenced elsewhere (ie. for [Document Root](https://manual.uberspace.de/web-documentroot/)). So, in case a new WeKan version is troublesome, just run `ln -sfn "$HOME/wekan/wekan-[your prior version no. here]/bundle" "$HOME/wekan/current"` and run `supervisorctl stop wekan && supervisorctl update wekan && supervisorctl start wekan`. 
+To prevent a failover whenever WeKan introduces new features or dependencies and a new version won't run at first, this script puts each installed version into its own subfolder ($HOME/wekan/wekan-{release version}/)and creates a symlink called `current` to be referenced elsewhere (ie. for [Document Root](https://manual.uberspace.de/web-documentroot/)). 
+
+* In case a new WeKan version is troublesome, run this to point the Symlink to your desired/previous version
+```bash
+ln -sfn "$HOME/wekan/wekan-[your prior version no. here]/bundle" "$HOME/wekan/current"
+```
+… followed by  
+```bash
+supervisorctl stop wekan && supervisorctl update wekan && supervisorctl start wekan
+```
+to restart WeKan.
 
 More information is available by asking the script for help. 
 ```bash
