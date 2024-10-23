@@ -213,12 +213,16 @@ if [[ "${@}" = *"--debug"* ]]; then
             exit 1
          fi
     
-         if revert "${2}"; then exit 0 else exit 1 fi fi
+         if revert "${2}"; then 
+            exit 0 
+        else exit 1 
+        fi 
+    fi
  # fi
 
 
 # Stores our current wekan version in a variable.
-#version=7.57 # Uncomment this line and comment the two lines below, if auto-download fails or a specific version is required.
+# version=7.57 # Uncomment this line and comment the two lines below, if auto-download fails or a specific version is required.
 base_url="https://github.com/wekan/wekan/releases/download"
 version=$(curl --silent https://api.github.com/repos/wekan/wekan/releases | grep -oP '"tag_name":\s*"v\K[^"]+' | sort -h | tail -n1)
 
